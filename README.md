@@ -1,4 +1,4 @@
-# website2
+# harrymaynard.ca
 
 ## Project setup
 ```
