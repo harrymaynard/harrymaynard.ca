@@ -37,35 +37,41 @@ const listBucketContents = async () => {
 const uploadFile = (fileName) => {
   return new Promise((resolve, reject) => {
     // call S3 to retrieve upload file to specified bucket
-    var uploadParams = {
+    const s3Key = fileName.replace(SOURCE_PATH + '/', '');
+    const uploadParams = {
       Bucket: BUCKET_NAME,
-      Key: '',
+      Key: s3Key,
       Body: ''
     };
 
     // Configure the file stream and obtain the upload parameters
-    var fileStream = fs.createReadStream(fileName);
+    const fileStream = fs.createReadStream(fileName);
     fileStream.on('error', function(error) {
       console.log('File Error', error);
       reject(error);
     });
     uploadParams.Body = fileStream;
-    uploadParams.Key = path.basename(fileName);
 
-    console.log('Uploaded file:', uploadParams.Key);
-    resolve();
+    // console.log('Uploaded file:', uploadParams.Key);
+    // resolve();
     // call S3 to retrieve upload file to specified bucket
-    // s3.upload(uploadParams, function (error, data) {
-    //   if (error) {
-    //     console.log("Error", error);
-    //     reject(error);
-    //   } else {
-    //     console.log("Upload Success", data.Location);
-    //     resolve(data);
-    //   }
-    // });
+    s3.upload(uploadParams, function (error, data) {
+      if (error) {
+        console.log("Error", error);
+        reject(error);
+      } else {
+        console.log("Upload Success", data.Location);
+        resolve(data);
+      }
+    });
   });
 };
+
+const uploadFiles = async (files) => {
+  for (let i=0; i<files.length; i++) {
+    await uploadFile(files[i]);
+  }
+}
 
 const getFilesToUpload = (currentDirectory) => {
   let files = [];
@@ -92,7 +98,8 @@ const run = async () => {
     //uploadFile('./index.html');
     const filesToUpload = getFilesToUpload(SOURCE_PATH);
     console.log('Files to upload: ', filesToUpload);
-
+    await uploadFiles(filesToUpload);
+    
     console.log('Deployment complete.');
   } catch(error) {
     console.error('Deployment failed.');
