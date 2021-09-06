@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const fs = require('fs');
-const path = require('path');
+const mime = require('mime');
 
 const BUCKET_NAME = 'harrymaynardca';
 const SOURCE_PATH = './dist';
@@ -12,9 +12,12 @@ AWS.config.loadFromPath("./aws-credentials.json");
 AWS.config.update({region: 'us-east-1'});
 
 // Create S3 service object.
-var s3 = new AWS.S3({apiVersion: '2006-03-01'});
+const s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
-
+/**
+ * Gets array of file objects the S3 bucket.
+ * @returns Promise.
+ */
 const listBucketContents = async () => {
   return new Promise((resolve, reject) => {
     // Create the parameters for calling listObjects
@@ -34,74 +37,94 @@ const listBucketContents = async () => {
   });
 };
 
+/**
+ * Given a file name, read and upload said file to S3.
+ * @param {String} fileName 
+ * @returns Promise.
+ */
 const uploadFile = (fileName) => {
   return new Promise((resolve, reject) => {
-    // call S3 to retrieve upload file to specified bucket
     const s3Key = fileName.replace(SOURCE_PATH + '/', '');
+
+    // Configure upload parameters.
     const uploadParams = {
       Bucket: BUCKET_NAME,
       Key: s3Key,
-      Body: ''
+      Body: '',
+      ContentType: mime.getType(fileName),
+      ACL: 'public-read'
     };
 
-    // Configure the file stream and obtain the upload parameters
+    // Configure the file stream.
     const fileStream = fs.createReadStream(fileName);
     fileStream.on('error', function(error) {
-      console.log('File Error', error);
+      console.error('File error:', error);
       reject(error);
     });
     uploadParams.Body = fileStream;
 
-    // console.log('Uploaded file:', uploadParams.Key);
-    // resolve();
-    // call S3 to retrieve upload file to specified bucket
+    // call S3 to upload file.
     s3.upload(uploadParams, function (error, data) {
       if (error) {
-        console.log("Error", error);
+        console.log("Error:", error);
         reject(error);
       } else {
-        console.log("Upload Success", data.Location);
+        console.log("Upload Success:", data.Location);
         resolve(data);
       }
     });
   });
 };
 
+/**
+ * Upload an array of file names.
+ * @param {Array} files Array of file names. 
+ */
 const uploadFiles = async (files) => {
   for (let i=0; i<files.length; i++) {
     await uploadFile(files[i]);
   }
 }
 
+/**
+ * Given a directory, recursively calls itself to get all file names.
+ * @param {String} currentDirectory 
+ * @returns Array of file names.
+ */
 const getFilesToUpload = (currentDirectory) => {
-  let files = [];
+  const files = [];
   const dir = fs.readdirSync(currentDirectory);
 
-  for (let i=0; i<dir.length; i++) {
+  // For each file/directory found in the given directory, populate an array of file names.
+  for (let i = 0; i < dir.length; i++) {
+    // If is a directory, then recursively call this function on the given directory.
     if (fs.lstatSync(currentDirectory + '/' + dir[i]).isDirectory()) {
       const directoryFiles = getFilesToUpload(currentDirectory + '/' + dir[i]);
       directoryFiles.forEach((item) => {
         files.push(item);
       });
-    } else {
+    }
+    // Else add the file to the array.
+    else {
       files.push(currentDirectory + '/' + dir[i]);
     }
   }
   return files;
 };
 
+/**
+ * Initial function to run.
+ */
 const run = async () => {
   try {
     //const bucketContents = await listBucketContents();
     //console.log('Bucket contents:', bucketContents);
 
-    //uploadFile('./index.html');
     const filesToUpload = getFilesToUpload(SOURCE_PATH);
-    console.log('Files to upload: ', filesToUpload);
     await uploadFiles(filesToUpload);
     
     console.log('Deployment complete.');
-  } catch(error) {
+  } catch (error) {
     console.error('Deployment failed.');
   }
 };
