@@ -18,7 +18,7 @@ const s3 = new AWS.S3({apiVersion: '2006-03-01'});
  * Gets array of file objects the S3 bucket.
  * @returns Promise.
  */
-const listBucketContents = async () => {
+const getBucketContents = async () => {
   return new Promise((resolve, reject) => {
     // Create the parameters for calling listObjects
     const bucketParams = {
@@ -36,6 +36,40 @@ const listBucketContents = async () => {
     });
   });
 };
+
+/**
+ * Empties the S3 bucket with the given data.
+ * @param {Object} data 
+ */
+const emptyBucket = async (data) => {
+  const items = data.Contents;
+  for (let i = 0; i < items.length; i++) {
+    await deleteObject(items[i].Key);
+  }
+}
+
+/**
+ * Deletes a given key from the S3 bucket.
+ * @param {String} itemKey 
+ * @returns Promise
+ */
+const deleteObject = (itemKey) => {
+  const deleteParams = {
+    Bucket: BUCKET_NAME,
+    Key: itemKey
+  };
+  return new Promise((resolve, reject) => {
+    s3.deleteObject(deleteParams, function (error, data) {
+      if (error) {
+        console.log('Delete object failure:', itemKey);
+        reject(error);
+      } else {
+        console.log('Deleted object success:', itemKey);
+        resolve(data);
+      }
+  });
+  })
+}
 
 /**
  * Given a file name, read and upload said file to S3.
@@ -66,10 +100,10 @@ const uploadFile = (fileName) => {
     // call S3 to upload file.
     s3.upload(uploadParams, function (error, data) {
       if (error) {
-        console.log("Error:", error);
+        console.log("Upload error:", error);
         reject(error);
       } else {
-        console.log("Upload Success:", data.Location);
+        console.log("Upload success:", data.Location);
         resolve(data);
       }
     });
@@ -117,9 +151,11 @@ const getFilesToUpload = (currentDirectory) => {
  */
 const run = async () => {
   try {
-    //const bucketContents = await listBucketContents();
-    //console.log('Bucket contents:', bucketContents);
+    // Empty S3 bucket.
+    const bucketContents = await getBucketContents();
+    await emptyBucket(bucketContents);
 
+    // Upload contents of './dist' to the S3 bucket.
     const filesToUpload = getFilesToUpload(SOURCE_PATH);
     await uploadFiles(filesToUpload);
     
