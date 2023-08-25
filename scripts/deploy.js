@@ -1,12 +1,15 @@
-const AWS = require('aws-sdk');
-const fs = require('fs');
-const mime = require('mime');
+import AWS from 'aws-sdk'
+import fs from 'fs'
+import mime from 'mime'
 
 const BUCKET_NAME = 'harrymaynardca';
 const SOURCE_PATH = './dist';
 
 // Load AWS credentials.
-AWS.config.loadFromPath("./aws-credentials.json");
+const credentials = new AWS.SharedIniFileCredentials({
+  profile: 'default',
+});
+AWS.config.credentials = credentials;
 
 // Set the region.
 AWS.config.update({region: 'us-east-1'});
