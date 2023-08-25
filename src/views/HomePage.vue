@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .page {
   height: 100vh;
   display: flex;
