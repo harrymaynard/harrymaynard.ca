@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
-import IconTwitter from '@/components/icons/IconTwitter.vue'
+import AnimatedBackground from '@/components/AnimatedBackground.vue'
 
 const title: string = 'Harry Maynard'
 
@@ -26,6 +26,7 @@ const animateTitle = () => {
 
 <template>
   <div class="home-page">
+    <AnimatedBackground />
     <div>
       <h1 :class="`title ${isTitleAnimationComplete ? 'animation-complete' : ''}`">
         <span>{{ animatedTitle }}</span>
@@ -45,13 +46,6 @@ const animateTitle = () => {
           title="GitHub"
         >
           <IconGitHub class="icon"/>
-        </a>
-        <a
-          href="https://twitter.com/theharrymaynard"
-          target="_blank"
-          title="Twitter"
-        >
-          <IconTwitter class="icon"/>
         </a>
       </div>
     </div>
