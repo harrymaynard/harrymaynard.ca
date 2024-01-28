@@ -4,14 +4,26 @@ import { onMounted, onBeforeUnmount } from 'vue'
 let isComponentMounted: boolean = false
 let canvasEl: HTMLCanvasElement
 let ctx: CanvasRenderingContext2D
-let circleXPosition: number = 0
+let waveXPosition: number = 0
 
 onMounted(() => {
   canvasEl = document.getElementById('background-canvas') as HTMLCanvasElement
   ctx = canvasEl.getContext("2d") as CanvasRenderingContext2D
 
-  // Set display size (css pixels).
+  setCanvasSize()
+  window.addEventListener('resize', setCanvasSize)
 
+  isComponentMounted = true
+  window.requestAnimationFrame(handleNextFrame)
+})
+
+onBeforeUnmount(() => {
+  isComponentMounted = false
+  window.removeEventListener('resize', setCanvasSize)
+})
+
+const setCanvasSize = () => {
+  // Set display size (css pixels).
   canvasEl.style.width = `${document.body.clientWidth}px`
   canvasEl.style.height = `${document.body.clientHeight}px`
 
@@ -22,14 +34,7 @@ onMounted(() => {
 
   // Normalize coordinate system to use CSS pixels.
   ctx.scale(scale, scale)
-
-  isComponentMounted = true
-  window.requestAnimationFrame(handleNextFrame)
-})
-
-onBeforeUnmount(() => {
-  isComponentMounted = true
-})
+}
 
 const handleNextFrame = () => {
   if (!isComponentMounted) return
@@ -37,37 +42,53 @@ const handleNextFrame = () => {
   const width = document.body.clientWidth
   const height = document.body.clientHeight
 
+  const waveWidth: number = 300
+  const waveHeight: number = 30
+  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 1
+
   ctx.fillStyle = '#FFF'
   ctx.fillRect(0, 0, width, height)
 
-  ctx.fillStyle = 'rgba(255,0,0,0.2)'
-  ctx.moveTo(0, height/2)
-  ctx.beginPath()
-  ctx.lineTo(1, (height/2))
+  const grd = ctx.createLinearGradient(0, height/2, 0, height)
+  grd.addColorStop(0, '#679ebf')
+  grd.addColorStop(1, '#FFF')
+
+  ctx.fillStyle = grd
   
-  ctx.bezierCurveTo(
-    150,
-    (height/2),
-    150,
-    (height/2)+100,
-    300,
-    (height/2)+100
-  )
-  ctx.bezierCurveTo(
-    450,
-    (height/2)+100,
-    450,
-    (height/2),
-    600,
-    (height/2)
-  )
+  ctx.beginPath()
+  ctx.moveTo(0, height/2)
+  
+  for (let i=0; i<waveIterationCount; i++) {
+    ctx.bezierCurveTo(
+      (waveWidth*i*2)+(waveWidth/2)+waveXPosition,
+      (height/2),
+      (waveWidth*i*2)+(waveWidth/2)+waveXPosition,
+      (height/2)+waveHeight,
+      (waveWidth*i*2)+waveWidth+waveXPosition,
+      (height/2)+waveHeight
+    )
+    ctx.bezierCurveTo(
+      (waveWidth*i*2)+waveWidth+(waveWidth/2)+waveXPosition,
+      (height/2)+waveHeight,
+      (waveWidth*i*2)+waveWidth+(waveWidth/2)+waveXPosition,
+      (height/2),
+      (waveWidth*i*2)+(waveWidth*2)+waveXPosition,
+      (height/2)
+    )
+  }
   ctx.lineTo(width, height)
   ctx.lineTo(0, height)
   ctx.closePath()
   ctx.fill()
-  circleXPosition++
+  
+  // Animate wave.
+  if (Math.abs(waveXPosition) >= waveWidth*2) {
+    waveXPosition = 0
+  } else {
+    waveXPosition--
+  }
 
-  //window.requestAnimationFrame(handleNextFrame)
+  window.requestAnimationFrame(handleNextFrame)
 }
 
 const handleCanvasClick = (event: MouseEvent) => {
@@ -91,7 +112,7 @@ const handleCanvasClick = (event: MouseEvent) => {
   bottom: 0;
   left: 0;
   right: 0;
-  //z-index: -1;
+  z-index: -1;
   background: #FFF;
 }
 </style>
