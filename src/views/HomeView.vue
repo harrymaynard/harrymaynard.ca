@@ -64,6 +64,7 @@ const animateTitle = () => {
     font-size: 48px;
     cursor: default;
     margin-right: -12px;
+    color: #000;
 
     .cursor {
       text-decoration: underline;
@@ -79,13 +80,20 @@ const animateTitle = () => {
   .links {
     margin-top: 30px;
 
-    .icon {
-      width: 10px;
-      height: 10px;
-      margin: 0 10px;
-      color: #000;
-      transition: all 0.5s ease;
-      opacity: 0;
+    a {
+      .icon {
+        width: 10px;
+        height: 10px;
+        margin: 0 10px;
+        color: #FFF;
+        filter: drop-shadow(0px 0px 3px #679ebf);
+        transition: all 0.5s ease;
+        opacity: 0;
+      }
+      &:hover .icon {
+        color: #000;
+        filter: none;
+      }
     }
     &.title-animation-complete .icon {
       opacity: 1;
