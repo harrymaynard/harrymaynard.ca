@@ -90,17 +90,12 @@ const handleNextFrame = () => {
 
   window.requestAnimationFrame(handleNextFrame)
 }
-
-const handleCanvasClick = (event: MouseEvent) => {
-  console.log('x:', event.clientX, 'y:', event.clientY)
-}
 </script>
 
 <template>
   <div class="animated-background">
     <canvas
       id="background-canvas"
-      @click="handleCanvasClick"
     ></canvas>
   </div>
 </template>
