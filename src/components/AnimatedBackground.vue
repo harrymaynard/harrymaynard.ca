@@ -44,7 +44,7 @@ const handleNextFrame = () => {
 
   const waveWidth: number = 300
   const waveHeight: number = 30
-  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 1
+  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 2
 
   ctx.fillStyle = '#FFF'
   ctx.fillRect(0, 0, width, height)
@@ -58,7 +58,7 @@ const handleNextFrame = () => {
   ctx.beginPath()
   ctx.moveTo(0, height/2)
   
-  for (let i=0; i<waveIterationCount; i++) {
+  for (let i=-1; i<waveIterationCount; i++) {
     ctx.bezierCurveTo(
       (waveWidth*i*2)+(waveWidth/2)+waveXPosition,
       (height/2),
