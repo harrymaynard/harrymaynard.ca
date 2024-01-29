@@ -38,14 +38,14 @@ const animateTitle = () => {
           target="_blank"
           title="LinkedIn"
         >
-          <IconLinkedIn class="icon"/>
+          <IconLinkedIn class="icon linkedin"/>
         </a>
         <a
           href="https://github.com/harrymaynard"
           target="_blank"
           title="GitHub"
         >
-          <IconGitHub class="icon"/>
+          <IconGitHub class="icon github"/>
         </a>
       </div>
     </div>
@@ -81,18 +81,32 @@ const animateTitle = () => {
     margin-top: 30px;
 
     a {
+      margin: 0 10px;
+      display: inline-block;
+      
       .icon {
         width: 10px;
         height: 10px;
-        margin: 0 10px;
+        opacity: 0;
         color: #FFF;
         filter: drop-shadow(0px 0px 3px #679ebf);
         transition: all 0.5s ease;
-        opacity: 0;
+
+        &.linkedin {
+          border-radius: 9px;
+        }
       }
       &:hover .icon {
-        color: #000;
+        transform: translateY(-6px);
         filter: none;
+
+        &.linkedin {
+          color: #0a66c2;
+          background: #FFF;
+        }
+        &.github {
+          color: #000;
+        }
       }
     }
     &.title-animation-complete .icon {
