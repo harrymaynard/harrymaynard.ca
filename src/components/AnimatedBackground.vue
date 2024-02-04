@@ -44,7 +44,7 @@ const handleNextFrame = () => {
 
   const waveWidth: number = 300
   const waveHeight: number = 30
-  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 2
+  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 2 // Plus two for start and end buffer.
 
   ctx.fillStyle = '#FFF'
   ctx.fillRect(0, 0, width, height)
