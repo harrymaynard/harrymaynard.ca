@@ -1,6 +1,6 @@
 {
   "name": "harrymaynard_ca",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -20,13 +20,13 @@
     "@types/node": "^18.17.11",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^5.1.2",
     "aws-sdk": "^2.982.0",
     "eslint": "^8.47.0",
     "mime": "^2.5.2",
     "sass": "^1.32.11",
     "typescript": "5.1.6",
-    "vite": "^4.4.9",
+    "vite": "^5.4.2",
     "vite-plugin-eslint": "^1.8.1",
     "vue-eslint-parser": "^9.3.1"
   }
