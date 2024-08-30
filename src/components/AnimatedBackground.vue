@@ -1,18 +1,26 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 
+const BACKGROUND_COLOR: string = '#FFF'
+const WAVE_COLOR_TOP: string = '#679ebf'
+const WAVE_COLOR_BOTTOM: string = '#FFF'
+const WAVE_WIDTH: number = 300
+const WAVE_HEIGHT: number = 30
+
 let isComponentMounted: boolean = false
 let ctx: CanvasRenderingContext2D
 let waveXPosition: number = 0
 const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
 
 onMounted(() => {
-  ctx = backgroundCanvasEl.value.getContext("2d") as CanvasRenderingContext2D
+  ctx = backgroundCanvasEl.value.getContext('2d') as CanvasRenderingContext2D
   
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
 
   isComponentMounted = true
+
+  // Start render loop.
   window.requestAnimationFrame(handleNextFrame)
 })
 
@@ -21,6 +29,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', setCanvasSize)
 })
 
+// Set canvas size, and scale according to pixel density.
 const setCanvasSize = () => {
   // Set display size (css pixels).
   backgroundCanvasEl.value.style.width = `${document.body.clientWidth}px`
@@ -36,57 +45,58 @@ const setCanvasSize = () => {
 }
 
 const handleNextFrame = () => {
+  // Exit render loop if component is unmounted.
   if (!isComponentMounted) return
 
-  const width = document.body.clientWidth
-  const height = document.body.clientHeight
+  const frameWidth: number = document.body.clientWidth
+  const frameHeight: number = document.body.clientHeight
 
-  const waveWidth: number = 300
-  const waveHeight: number = 30
-  const waveIterationCount: number = Math.ceil(width / (waveWidth*2)) + 2 // Plus two for start and end buffer.
+  const waveIterationCount: number = Math.ceil(frameWidth / (WAVE_WIDTH*2)) + 2 // Plus two for start and end buffer.
 
-  ctx.fillStyle = '#FFF'
-  ctx.fillRect(0, 0, width, height)
+  ctx.fillStyle = BACKGROUND_COLOR
+  ctx.fillRect(0, 0, frameWidth, frameHeight)
 
-  const grd = ctx.createLinearGradient(0, height/2, 0, height)
-  grd.addColorStop(0, '#679ebf')
-  grd.addColorStop(1, '#FFF')
+  const gradient = ctx.createLinearGradient(0, frameHeight/2, 0, frameHeight)
+  gradient.addColorStop(0, WAVE_COLOR_TOP)
+  gradient.addColorStop(1, WAVE_COLOR_BOTTOM)
 
-  ctx.fillStyle = grd
+  ctx.fillStyle = gradient
   
   ctx.beginPath()
-  ctx.moveTo(0, height/2)
+  ctx.moveTo(0, frameHeight/2)
   
+  // Draw cyclical wave.
   for (let i=-1; i<waveIterationCount; i++) {
     ctx.bezierCurveTo(
-      (waveWidth*i*2)+(waveWidth/2)+waveXPosition,
-      (height/2),
-      (waveWidth*i*2)+(waveWidth/2)+waveXPosition,
-      (height/2)+waveHeight,
-      (waveWidth*i*2)+waveWidth+waveXPosition,
-      (height/2)+waveHeight
+      (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+waveXPosition,
+      (frameHeight/2),
+      (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+waveXPosition,
+      (frameHeight/2)+WAVE_HEIGHT,
+      (WAVE_WIDTH*i*2)+WAVE_WIDTH+waveXPosition,
+      (frameHeight/2)+WAVE_HEIGHT
     )
     ctx.bezierCurveTo(
-      (waveWidth*i*2)+waveWidth+(waveWidth/2)+waveXPosition,
-      (height/2)+waveHeight,
-      (waveWidth*i*2)+waveWidth+(waveWidth/2)+waveXPosition,
-      (height/2),
-      (waveWidth*i*2)+(waveWidth*2)+waveXPosition,
-      (height/2)
+      (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+waveXPosition,
+      (frameHeight/2)+WAVE_HEIGHT,
+      (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+waveXPosition,
+      (frameHeight/2),
+      (WAVE_WIDTH*i*2)+(WAVE_WIDTH*2)+waveXPosition,
+      (frameHeight/2)
     )
   }
-  ctx.lineTo(width, height)
-  ctx.lineTo(0, height)
+  ctx.lineTo(frameWidth, frameHeight)
+  ctx.lineTo(0, frameHeight)
   ctx.closePath()
   ctx.fill()
   
-  // Animate wave.
-  if (Math.abs(waveXPosition) >= waveWidth*2) {
+  // Animate wave to the left. Reset position if it goes beyond full wave width.
+  if (Math.abs(waveXPosition) >= WAVE_WIDTH*2) {
     waveXPosition = 0
   } else {
     waveXPosition--
   }
 
+  // Request next animation frame.
   window.requestAnimationFrame(handleNextFrame)
 }
 </script>

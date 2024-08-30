@@ -1,8 +1,8 @@
-# harrymaynard.ca
+# harrymaynard.ca front-end
 
-## Project setup
+### Project setup
 ```
-npm install
+npm i
 ```
 
 ### Compiles and hot-reloads for development
@@ -15,7 +15,12 @@ npm run dev
 npm run build
 ```
 
-### Run your unit tests
+### Run unit tests
 ```
 npm run test:unit
+```
+
+### Run linting analysis
+```
+npm run lint
 ```
