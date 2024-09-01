@@ -4,7 +4,8 @@ import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
 import AnimatedBackground from '@/components/AnimatedBackground.vue'
 
-const title: string = 'Harry Maynard'
+const TITLE: string = 'Harry Maynard'
+const TITLE_ANIMATION_INTERVAL: number = 100
 
 const animatedTitle = ref<string>('')
 const isTitleAnimationComplete = ref<boolean>(false)
@@ -13,22 +14,22 @@ onMounted(() => {
   animateTitle()
 })
 
-const animateTitle = () => {
-  if (animatedTitle.value.length < title.length) {
-    animatedTitle.value += title.charAt(animatedTitle.value.length)
-    setTimeout(animateTitle, 100)
+const animateTitle = (): void => {
+  if (animatedTitle.value.length < TITLE.length) {
+    animatedTitle.value += TITLE.charAt(animatedTitle.value.length)
+    setTimeout(animateTitle, TITLE_ANIMATION_INTERVAL)
   }
-  if (animatedTitle.value.length === title.length) {
+  if (animatedTitle.value.length === TITLE.length) {
     isTitleAnimationComplete.value = true
   }
 }
 </script>
 
 <template>
-  <div class="home-page">
+  <div class="home-view">
     <AnimatedBackground />
     <div>
-      <h1 :class="`title ${isTitleAnimationComplete ? 'animation-complete' : ''}`">
+      <h1 :class="`title ${isTitleAnimationComplete ? 'title-animation-complete' : ''}`">
         <span>{{ animatedTitle }}</span>
         <span class="cursor">&nbsp;</span>
       </h1>
@@ -53,7 +54,7 @@ const animateTitle = () => {
 </template>
 
 <style lang="scss" scoped>
-.home-page {
+.home-view {
   height: 100vh;
   display: flex;
   align-items: center;
@@ -70,7 +71,7 @@ const animateTitle = () => {
       text-decoration: underline;
       visibility: visible;
     }
-    &.animation-complete {
+    &.title-animation-complete {
       .cursor {
         animation: infinite blink;
         animation-duration: 1s;
