@@ -13,6 +13,6 @@ describe('HomeView.vue', () => {
         }
       }
     })
-    expect(wrapper.get('.home-page')).toBeTruthy()
+    expect(wrapper.get('.home-view')).toBeTruthy()
   })
 })

@@ -11,6 +11,6 @@ describe('App.vue', () => {
         }
       }
     })
-    expect(wrapper.get('#app')).toBeTruthy()
+    expect(wrapper.get('#app-root-component')).toBeTruthy()
   })
 })
