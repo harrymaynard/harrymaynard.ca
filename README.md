@@ -1,5 +1,7 @@
 # harrymaynard.ca front-end
 
+[![Continuous Integration](https://github.com/harrymaynard/harrymaynard.ca/workflows/Continuous%20Integration/badge.svg)](https://github.com/harrymaynard/harrymaynard.ca/actions/workflows/ci.yml)
+
 ### Project setup
 ```
 npm i
