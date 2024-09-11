@@ -6,7 +6,6 @@ import { SkyEntityCollection } from '@/canvas/entities/SkyEntityCollection'
 
 let isComponentMounted: boolean = false
 let ctx: CanvasRenderingContext2D
-// let waveXPosition: number = 0
 const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
 let renderEngine: RenderEngine
 
