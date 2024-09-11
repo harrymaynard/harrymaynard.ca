@@ -6,7 +6,15 @@ const WAVE_COLOR_BOTTOM: string = '#FFF'
 const WAVE_WIDTH: number = 300
 const WAVE_HEIGHT: number = 30
 
+/**
+ * Represents a wave entity on the canvas.
+ * @extends BaseEntity
+ */
 export class WaveEntity extends BaseEntity {
+  
+  /**
+   * Create a new WaveEntity.
+   */
   constructor({
     x,
     y,
@@ -25,6 +33,10 @@ export class WaveEntity extends BaseEntity {
     super({ x, y, width, height, xVelocity, yVelocity })
   }
 
+  /**
+   * Update the entity's position.
+   * @returns void
+   */
   update(): void {
     super.update()
 
@@ -34,6 +46,10 @@ export class WaveEntity extends BaseEntity {
     }
   }
 
+  /**
+   * Render the entity on the canvas.
+   * @returns void
+   */
   public render(): void {
     this.context.fillStyle = BACKGROUND_COLOR
     this.context.fillRect(0, 0, this.frameWidth, this.frameHeight)
