@@ -2,6 +2,7 @@
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RenderEngine } from '@/canvas/RenderEngine'
 import { WaveEntity } from '@/canvas/entities/WaveEntity'
+import { SkyEntityCollection } from '@/canvas/entities/SkyEntityCollection'
 
 let isComponentMounted: boolean = false
 let ctx: CanvasRenderingContext2D
@@ -26,6 +27,14 @@ onMounted(() => {
     height: document.body.clientHeight,
     xVelocity: -1,
   }))
+  const skyEntityCollection = new SkyEntityCollection({
+    x: 0,
+    y: 0,
+    width: document.body.clientWidth,
+    height: document.body.clientHeight / 2,
+  })
+  renderEngine.addEntity(skyEntityCollection)
+  skyEntityCollection.generateEntities()
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
