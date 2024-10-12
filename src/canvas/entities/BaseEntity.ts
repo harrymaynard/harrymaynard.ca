@@ -1,7 +1,7 @@
 /**
  * Base class for all entities in the canvas.
  */
-export class BaseEntity {
+export class BaseEntity extends EventTarget {
   protected context: CanvasRenderingContext2D
   protected frameWidth: number
   protected frameHeight: number
@@ -30,6 +30,7 @@ export class BaseEntity {
     xVelocity?: number
     yVelocity?: number
   }) {
+    super()
     this.x = x
     this.y = y
     this.width = width

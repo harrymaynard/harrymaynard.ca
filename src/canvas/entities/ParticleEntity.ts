@@ -25,12 +25,11 @@ export class ParticleEntity extends BaseEntity {
     // Emit the 'exit-frame' event if entity is out of view.
     if (
       this.x < 0 ||
-      this.y < 0 ||
       this.x > this.frameWidth ||
+      this.y < 0 ||
       this.y > this.frameHeight
     ) {
-      // TODO: Emit event.
-      // this.emit('exit-frame', this)
+      this.dispatchEvent(new Event('exit-frame'))
     }
   }
 
