@@ -30,7 +30,7 @@ onMounted(() => {
     x: 0,
     y: 0,
     width: document.body.clientWidth,
-    height: document.body.clientHeight / 2,
+    height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
   })
   renderEngine.addEntity(skyEntityCollection)
   skyEntityCollection.generateEntities()

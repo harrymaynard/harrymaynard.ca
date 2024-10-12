@@ -1,4 +1,4 @@
-export class BaseEntityCollection {
+export class BaseEntityCollection extends EventTarget {
   protected context: CanvasRenderingContext2D
   protected frameWidth: number
   protected frameHeight: number
@@ -25,6 +25,7 @@ export class BaseEntityCollection {
     xVelocity?: number
     yVelocity?: number
   }) {
+    super()
     this.x = x
     this.y = y
     this.width = width
