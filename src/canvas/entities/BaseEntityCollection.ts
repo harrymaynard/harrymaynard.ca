@@ -51,9 +51,9 @@ export class BaseEntityCollection extends EventTarget {
   }
 
   public removeEntity(entity: any): void {
-    const index = this._entities.indexOf(entity)
+    const index = this.entities.indexOf(entity)
     if (index >= 0) {
-      this._entities.splice(index, 1)
+      this.entities.splice(index, 1)
     }
   }
 
