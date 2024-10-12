@@ -3,7 +3,7 @@ import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
 
 const SKY_PARTICLE_COUNT: number = 10
 const MIN_PARTICLE_VELOCITY: number = 0.1
-const MAX_PARTICLE_VELOCITY: number = 1
+const MAX_PARTICLE_VELOCITY: number = 0.5
 
 export class SkyEntityCollection extends BaseEntityCollection {
 
@@ -11,7 +11,7 @@ export class SkyEntityCollection extends BaseEntityCollection {
     super(params)
 
     // Bind class event listeners.
-    this.handleParticelExit = this.handleParticleExit.bind(this)
+    this.handleParticleExit = this.handleParticleExit.bind(this)
   }
 
   public generateEntities(): void {
@@ -70,10 +70,10 @@ export class SkyEntityCollection extends BaseEntityCollection {
 
   private handleParticleExit(event: Event): void {
     const entity: BaseEntity = event.target as BaseEntity
-
+    
     const index = this.entities.indexOf(entity)
     if (index >= 0) {
-      entity.removeEventListener('exit-frame', this.handleParticelExit)
+      entity.removeEventListener('exit-frame', this.handleParticleExit)
       this.entities.splice(index, 1)
       this.generateEntity()
     }
