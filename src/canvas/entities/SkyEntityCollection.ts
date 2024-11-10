@@ -1,9 +1,11 @@
 import { BaseEntityCollection } from '@/canvas/entities/BaseEntityCollection'
 import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
 
-const SKY_PARTICLE_COUNT: number = 10
+const SKY_PARTICLE_COUNT: number = 100
 const MIN_PARTICLE_VELOCITY: number = 0.1
 const MAX_PARTICLE_VELOCITY: number = 0.5
+const MIN_PARTICLE_SIZE: number = 5
+const MAX_PARTICLE_SIZE: number = 10
 
 export class SkyEntityCollection extends BaseEntityCollection {
 
@@ -24,6 +26,7 @@ export class SkyEntityCollection extends BaseEntityCollection {
   public generateEntity(isOffScreen: boolean = true): void {
     const xVelocity: number = -(this.getRandomVelocity())
     const yVelocity: number = this.getRandomVelocity()
+    const entitySize: number = this.getRandomEntitySize()
     let x: number
     let y: number
 
@@ -32,24 +35,24 @@ export class SkyEntityCollection extends BaseEntityCollection {
 
       // X-axis entry.
       if (startingAxis === 0) {
-        x = Math.random() * this.width
-        y = 0
+        x = (Math.random() * this.width) - entitySize
+        y = -entitySize
       }
       // Y-axis entry.
       else {
         x = this.width
-        y = Math.random() * this.height
+        y = (Math.random() * this.height) - entitySize
       }
     } else {
-      x = Math.random() * this.width
-      y = Math.random() * this.height
+      x = (Math.random() * this.width) - entitySize
+      y = (Math.random() * this.height) - entitySize
     }
 
     const particle: ParticleEntity = new ParticleEntity({
       x,
       y,
-      width: 10,
-      height: 10,
+      width: entitySize,
+      height: entitySize,
       xVelocity,
       yVelocity,
     })
@@ -80,6 +83,10 @@ export class SkyEntityCollection extends BaseEntityCollection {
   }
 
   private getRandomVelocity(): number {
-    return Math.random() * (MAX_PARTICLE_VELOCITY - MIN_PARTICLE_VELOCITY) + MIN_PARTICLE_VELOCITY;
+    return Math.random() * (MAX_PARTICLE_VELOCITY - MIN_PARTICLE_VELOCITY) + MIN_PARTICLE_VELOCITY
+  }
+
+  private getRandomEntitySize(): number {
+    return Math.floor(Math.random() * (MAX_PARTICLE_SIZE - MIN_PARTICLE_SIZE) + MIN_PARTICLE_SIZE)
   }
 }

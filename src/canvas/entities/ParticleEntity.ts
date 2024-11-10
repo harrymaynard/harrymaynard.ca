@@ -1,5 +1,7 @@
 import { BaseEntity } from '@/canvas/entities/BaseEntity'
 
+const PARTICLE_COLOR: string = '#CCC'
+
 export class ParticleEntity extends BaseEntity {
   constructor({
     x,
@@ -24,9 +26,9 @@ export class ParticleEntity extends BaseEntity {
 
     // Emit the 'exit-frame' event if entity is out of view.
     if (
-      this.x < 0 ||
+      this.x < -this.width ||
       this.x > this.frameWidth ||
-      this.y < 0 ||
+      this.y < -this.height ||
       this.y > this.frameHeight
     ) {
       this.dispatchEvent(new Event('exit-frame'))
@@ -35,9 +37,9 @@ export class ParticleEntity extends BaseEntity {
 
   public render(): void {
     // TODO: Draw filled circle.
-    this.context.fillStyle = '#000'
+    this.context.fillStyle = PARTICLE_COLOR
     this.context.beginPath()
-    this.context.arc(this.x, this.y, 50, 0, Math.PI * 2)
+    this.context.arc(this.x, this.y, (this.width  / 2), 0, Math.PI * 2)
     this.context.fill()
   }
 }
