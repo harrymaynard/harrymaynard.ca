@@ -1,6 +1,5 @@
 import { BaseEntity } from '@/canvas/entities/BaseEntity'
 
-const BACKGROUND_COLOR: string = '#FFF'
 const WAVE_COLOR_TOP: string = '#679ebf'
 const WAVE_COLOR_BOTTOM: string = '#FFF'
 const WAVE_WIDTH: number = 300
@@ -51,9 +50,6 @@ export class WaveEntity extends BaseEntity {
    * @returns void
    */
   public render(): void {
-    this.context.fillStyle = BACKGROUND_COLOR
-    this.context.fillRect(0, 0, this.frameWidth, this.frameHeight)
-
     const gradient = this.context.createLinearGradient(0, this.frameHeight/2, 0, this.frameHeight)
     gradient.addColorStop(0, WAVE_COLOR_TOP)
     gradient.addColorStop(1, WAVE_COLOR_BOTTOM)

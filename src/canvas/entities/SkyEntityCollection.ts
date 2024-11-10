@@ -59,12 +59,7 @@ export class SkyEntityCollection extends BaseEntityCollection {
     
     particle.addEventListener('exit-frame', this.handleParticleExit)
     
-    particle.setRenderContext(
-      this.context,
-      this.width,
-      this.height
-    )
-    this.entities.push(particle)
+    this.addEntity(particle)
   }
 
   public update() {

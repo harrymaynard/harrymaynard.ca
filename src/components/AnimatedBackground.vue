@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RenderEngine } from '@/canvas/RenderEngine'
+import { BackgroundEntity } from '@/canvas/entities/BackgroundEntity'
 import { WaveEntity } from '@/canvas/entities/WaveEntity'
 import { SkyEntityCollection } from '@/canvas/entities/SkyEntityCollection'
 
@@ -19,6 +20,26 @@ onMounted(() => {
     document.body.clientWidth,
     document.body.clientHeight
   )
+
+  // Background entity.
+  renderEngine.addEntity(new BackgroundEntity({}))
+
+  // Sky entity.
+  const skyEntityCollection = new SkyEntityCollection({
+    x: 0,
+    y: 0,
+    width: document.body.clientWidth,
+    height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
+  })
+  skyEntityCollection.setRenderContext(
+    ctx,
+    document.body.clientWidth,
+    document.body.clientHeight
+  )
+  skyEntityCollection.generateEntities()
+  renderEngine.addEntity(skyEntityCollection)
+  
+  // Wave entity.
   renderEngine.addEntity(new WaveEntity({
     x: 0,
     y: document.body.clientHeight / 2,
@@ -26,14 +47,6 @@ onMounted(() => {
     height: document.body.clientHeight,
     xVelocity: -1,
   }))
-  const skyEntityCollection = new SkyEntityCollection({
-    x: 0,
-    y: 0,
-    width: document.body.clientWidth,
-    height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
-  })
-  renderEngine.addEntity(skyEntityCollection)
-  skyEntityCollection.generateEntities()
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)

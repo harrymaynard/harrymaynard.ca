@@ -47,6 +47,11 @@ export class BaseEntityCollection extends EventTarget {
   }
 
   protected addEntity(entity: BaseEntity | BaseEntityCollection): void {
+    entity.setRenderContext(
+      this.context,
+      this.frameWidth,
+      this.frameHeight
+    )
     this.entities.push(entity)
   }
 
