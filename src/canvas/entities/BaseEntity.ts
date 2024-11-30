@@ -1,16 +1,18 @@
+import { IEntity } from '@/canvas/interfaces/IEntity'
+
 /**
  * Base class for all entities in the canvas.
  */
-export class BaseEntity extends EventTarget {
-  protected context: CanvasRenderingContext2D
-  protected frameWidth: number
-  protected frameHeight: number
-  protected x: number
-  protected y: number
-  protected width: number
-  protected height: number
-  protected xVelocity: number
-  protected yVelocity: number
+export abstract class BaseEntity extends EventTarget implements IEntity {
+  public context: CanvasRenderingContext2D | undefined
+  public frameWidth: number = 0
+  public frameHeight: number = 0
+  public x: number
+  public y: number
+  public width: number
+  public height: number
+  public xVelocity: number
+  public yVelocity: number
 
   /**
    * Create a new BaseEntity.
@@ -43,13 +45,13 @@ export class BaseEntity extends EventTarget {
    * Render the entity on the canvas.
    * @returns void
    */
-  abstract render(): void
+  public abstract render(): void
   
   /**
    * Update the entity's position.
    * @returns void
    */
-  protected update(): void {
+  public update(): void {
     this.x += this.xVelocity || 0
     this.y += this.yVelocity || 0
   }
@@ -123,5 +125,17 @@ export class BaseEntity extends EventTarget {
     this.context = context
     this.frameWidth = frameWidth
     this.frameHeight = frameHeight
+  }
+
+  /**
+   * Returns a boolean indicating whether the render context is set.
+   * @returns boolean
+   */
+  public isRenderContextValid(): boolean {
+    return (
+      !!this.context &&
+      !!this.frameWidth &&
+      !!this.frameHeight
+    )
   }
 }

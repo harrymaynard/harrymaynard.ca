@@ -22,7 +22,7 @@ onMounted(() => {
   )
 
   // Background entity.
-  renderEngine.addEntity(new BackgroundEntity({}))
+  renderEngine.addEntity(new BackgroundEntity())
 
   // Sky entity.
   const skyEntityCollection = new SkyEntityCollection({

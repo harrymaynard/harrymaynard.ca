@@ -1,14 +1,15 @@
 import { BaseEntity } from './entities/BaseEntity'
+import { BaseEntityCollection } from './entities/BaseEntityCollection'
 
 /**
  * Represents the render engine for a canvas.
  * @class
  */
 export class RenderEngine {
-  private _context: CanvasRenderingContext2D
-  private _frameWidth: number
-  private _frameHeight: number
-  private readonly _entities: Array<BaseEntity> = []
+  private _context: CanvasRenderingContext2D | undefined
+  private _frameWidth: number | undefined
+  private _frameHeight: number | undefined
+  private readonly _entities: Array<BaseEntity | BaseEntityCollection> = []
   
   /**
    * Updates all entities in the render engine instance.
@@ -25,7 +26,14 @@ export class RenderEngine {
    * @returns void
    */
   public render(): void {
+    // Early return if the render context is not valid.
+    if (!this.isRenderContextValid()) return
+
+    // Clear the canvas.
+    // @ts-expect-error - TS2532: Object is possibly 'undefined'.
     this._context.clearRect(0, 0, this._frameWidth, this._frameHeight)
+
+    // Render each entity.
     this._entities.forEach((entity) => {
       entity.render()
     })
@@ -36,12 +44,15 @@ export class RenderEngine {
    * @param entity The entity to add.
    * @returns void
    */
-  public addEntity(entity: BaseEntity): void {
-    entity.setRenderContext(
-      this._context,
-      this._frameWidth,
-      this._frameHeight
-    )
+  public addEntity(entity: BaseEntity | BaseEntityCollection): void {
+    if (this.isRenderContextValid()) {
+      entity.setRenderContext(
+        // @ts-expect-error - TS2532: Object is possibly 'undefined'.
+        this._context,
+        this._frameWidth,
+        this._frameHeight
+      )
+    }
     this._entities.push(entity)
   }
 
@@ -76,5 +87,17 @@ export class RenderEngine {
     this._entities.forEach((entity) => {
       entity.setRenderContext(context, frameWidth, frameHeight)
     })
+  }
+
+  /**
+   * Returns a boolean indicating whether the render context is set.
+   * @returns boolean
+   */
+  public isRenderContextValid(): boolean {
+    return (
+      !!this._context &&
+      !!this._frameWidth &&
+      !!this._frameHeight
+    )
   }
 }
