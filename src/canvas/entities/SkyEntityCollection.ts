@@ -1,11 +1,17 @@
 import { BaseEntityCollection } from '@/canvas/entities/BaseEntityCollection'
 import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
+import { BaseEntity } from '@/canvas/entities/BaseEntity'
 
 const SKY_PARTICLE_COUNT: number = 100
 const MIN_PARTICLE_VELOCITY: number = 0.1
 const MAX_PARTICLE_VELOCITY: number = 0.5
 const MIN_PARTICLE_SIZE: number = 5
 const MAX_PARTICLE_SIZE: number = 10
+
+enum SkyEntryAxisType {
+  X = 0,
+  Y = 1,
+}
 
 export class SkyEntityCollection extends BaseEntityCollection {
 
@@ -31,10 +37,15 @@ export class SkyEntityCollection extends BaseEntityCollection {
     let y: number
 
     if (isOffScreen) {
-      const startingAxis: number = Math.floor(Math.random() * 2)
+      const entryAxisTotalLength: number = this.width + this.height
+      const entryAxisPosition: number = Math.floor(Math.random() * entryAxisTotalLength)
+      const startingAxis: number
+        = entryAxisTotalLength - entryAxisPosition < this.width
+          ? SkyEntryAxisType.X
+          : SkyEntryAxisType.Y
 
       // X-axis entry.
-      if (startingAxis === 0) {
+      if (startingAxis === SkyEntryAxisType.X) {
         x = (Math.random() * this.width) - entitySize
         y = -entitySize
       }

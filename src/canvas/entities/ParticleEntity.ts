@@ -29,17 +29,24 @@ export class ParticleEntity extends BaseEntity {
       this.x < -this.width ||
       this.x > this.frameWidth ||
       this.y < -this.height ||
-      this.y > this.frameHeight
+      this.y - this.height / 2 > this.frameHeight
     ) {
       this.dispatchEvent(new Event('exit-frame'))
     }
   }
 
   public render(): void {
-    // TODO: Draw filled circle.
+    if (!this.isRenderContextValid()) return
+
+    const radius: number = this.width / 2
+
+    // @ts-expect-error - TS2532: Object is possibly 'undefined'.
     this.context.fillStyle = PARTICLE_COLOR
+    // @ts-expect-error - TS2532: Object is possibly 'undefined'.
     this.context.beginPath()
-    this.context.arc(this.x, this.y, (this.width  / 2), 0, Math.PI * 2)
+    // @ts-expect-error - TS2532: Object is possibly 'undefined'.
+    this.context.arc(this.x + radius, this.y + radius, radius, 0, Math.PI * 2)
+    // @ts-expect-error - TS2532: Object is possibly 'undefined'.
     this.context.fill()
   }
 }
