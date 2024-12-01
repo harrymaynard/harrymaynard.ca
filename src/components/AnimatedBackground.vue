@@ -1,63 +1,25 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
-import { RenderEngine } from '@/canvas/RenderEngine'
-import { BackgroundEntity } from '@/canvas/entities/BackgroundEntity'
-import { WaveEntity } from '@/canvas/entities/WaveEntity'
-import { SkyEntity } from '@/canvas/entities/SkyEntity'
+import { RootEntity } from '@/canvas/entities/RootEntity'
 
 let isComponentMounted: boolean = false
-let ctx: CanvasRenderingContext2D
 const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
-let renderEngine: RenderEngine
+let context: CanvasRenderingContext2D
+let rootEntity: RootEntity
 
 onMounted(() => {
-  ctx = backgroundCanvasEl.value.getContext('2d') as CanvasRenderingContext2D
-
-  // Initialize render engine and wave entity.
-  renderEngine = new RenderEngine()
-  renderEngine.setRenderContext(ctx)
-  renderEngine.setFrameSize(
-    document.body.clientWidth,
-    document.body.clientHeight
-  )
-
-  // Background entity.
-  const backgroundEntity = new BackgroundEntity({
-    context: ctx,
-    position: {
-      x: 0,
-      y: 0,
-      width: document.body.clientWidth,
-      height: document.body.clientHeight
-    },
-  })
-  renderEngine.addEntity(backgroundEntity)
-
-  // Sky entity.
-  const skyEntity = new SkyEntity({
-    context: ctx,
-    position: {
-      x: 0,
-      y: 0,
-      width: document.body.clientWidth,
-      height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
-    },
-  })
-  skyEntity.generateEntities()
-  renderEngine.addEntity(skyEntity)
+  context = backgroundCanvasEl.value.getContext('2d') as CanvasRenderingContext2D
   
-  // Wave entity.
-  const waveEntity = new WaveEntity({
-    context: ctx,
+  // Root entity that contains all other nested entities.
+  rootEntity = new RootEntity({
+    context,
     position: {
       x: 0,
-      y: document.body.clientHeight / 2,
+      y: 0,
       width: document.body.clientWidth,
       height: document.body.clientHeight,
     },
-    xVelocity: -1,
   })
-  renderEngine.addEntity(waveEntity)
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
@@ -76,7 +38,7 @@ onBeforeUnmount(() => {
 // Set canvas size, and scale according to pixel density.
 const setCanvasSize = () => {
   // Set frame size after resize.
-  renderEngine.setFrameSize(
+  rootEntity.setFrameSize(
     document.body.clientWidth,
     document.body.clientHeight
   )
@@ -91,7 +53,7 @@ const setCanvasSize = () => {
   backgroundCanvasEl.value.height = Math.floor(document.body.clientHeight * scale)
 
   // Normalize coordinate system to use CSS pixels.
-  ctx.scale(scale, scale)
+  context.scale(scale, scale)
 }
 
 const handleNextFrame = () => {
@@ -99,8 +61,8 @@ const handleNextFrame = () => {
   if (!isComponentMounted) return
 
   // Update entities and render frame.
-  renderEngine.update()
-  renderEngine.render()
+  rootEntity.update()
+  rootEntity.render()
   
   // Request next animation frame.
   window.requestAnimationFrame(handleNextFrame)
