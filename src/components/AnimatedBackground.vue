@@ -3,7 +3,7 @@ import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RenderEngine } from '@/canvas/RenderEngine'
 import { BackgroundEntity } from '@/canvas/entities/BackgroundEntity'
 import { WaveEntity } from '@/canvas/entities/WaveEntity'
-import { SkyEntityCollection } from '@/canvas/entities/SkyEntityCollection'
+import { SkyEntity } from '@/canvas/entities/SkyEntity'
 
 let isComponentMounted: boolean = false
 let ctx: CanvasRenderingContext2D
@@ -15,8 +15,8 @@ onMounted(() => {
 
   // Initialize render engine and wave entity.
   renderEngine = new RenderEngine()
-  renderEngine.setRenderContext(
-    ctx,
+  renderEngine.setRenderContext(ctx)
+  renderEngine.setFrameSize(
     document.body.clientWidth,
     document.body.clientHeight
   )
@@ -25,19 +25,14 @@ onMounted(() => {
   renderEngine.addEntity(new BackgroundEntity())
 
   // Sky entity.
-  const skyEntityCollection = new SkyEntityCollection({
+  const skyEntity = new SkyEntity({
     x: 0,
     y: 0,
     width: document.body.clientWidth,
     height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
   })
-  skyEntityCollection.setRenderContext(
-    ctx,
-    document.body.clientWidth,
-    document.body.clientHeight
-  )
-  skyEntityCollection.generateEntities()
-  renderEngine.addEntity(skyEntityCollection)
+  renderEngine.addEntity(skyEntity)
+  skyEntity.generateEntities()
   
   // Wave entity.
   renderEngine.addEntity(new WaveEntity({
@@ -65,8 +60,8 @@ onBeforeUnmount(() => {
 // Set canvas size, and scale according to pixel density.
 const setCanvasSize = () => {
   // Set render context and frame size.
-  renderEngine.setRenderContext(
-    ctx,
+  renderEngine.setRenderContext(ctx)
+  renderEngine.setFrameSize(
     document.body.clientWidth,
     document.body.clientHeight
   )

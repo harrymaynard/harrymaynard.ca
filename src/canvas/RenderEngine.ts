@@ -1,5 +1,4 @@
 import { BaseEntity } from './entities/BaseEntity'
-import { BaseEntityCollection } from './entities/BaseEntityCollection'
 
 /**
  * Represents the render engine for a canvas.
@@ -9,7 +8,7 @@ export class RenderEngine {
   private _context: CanvasRenderingContext2D | undefined
   private _frameWidth: number | undefined
   private _frameHeight: number | undefined
-  private readonly _entities: Array<BaseEntity | BaseEntityCollection> = []
+  private readonly _entities: Array<BaseEntity> = []
   
   /**
    * Updates all entities in the render engine instance.
@@ -44,14 +43,12 @@ export class RenderEngine {
    * @param entity The entity to add.
    * @returns void
    */
-  public addEntity(entity: BaseEntity | BaseEntityCollection): void {
+  public addEntity(entity: BaseEntity): void {
     if (this.isRenderContextValid()) {
-      entity.setRenderContext(
-        // @ts-expect-error - TS2532: Object is possibly 'undefined'.
-        this._context,
-        this._frameWidth,
-        this._frameHeight
-      )
+      // @ts-expect-error - TS2532: Object is possibly 'undefined'.
+      entity.setRenderContext(this._context)
+      // @ts-expect-error - TS2532: Object is possibly 'undefined'.
+      entity.setFrameSize(this._frameWidth, this._frameHeight)
     }
     this._entities.push(entity)
   }
@@ -71,21 +68,27 @@ export class RenderEngine {
   /**
    * Set the render context for the render engine instance.
    * @param context The canvas rendering context.
-   * @param frameWidth The width of the frame.
-   * @param frameHeight The height of the frame.
    * @returns void
    */
-  public setRenderContext(
-    context: CanvasRenderingContext2D,
-    frameWidth: number,
-    frameHeight: number
-  ): void {
+  public setRenderContext(context: CanvasRenderingContext2D): void {
     this._context = context
-    this._frameWidth = frameWidth
-    this._frameHeight = frameHeight
+    
+    this._entities.forEach((entity) => {
+      entity.setRenderContext(context)
+    })
+  }
+
+  /**
+   * Set the frame size.
+   * @param width 
+   * @param height 
+   */
+  public setFrameSize(width: number, height: number): void {
+    this._frameWidth = width
+    this._frameHeight = height
 
     this._entities.forEach((entity) => {
-      entity.setRenderContext(context, frameWidth, frameHeight)
+      entity.setFrameSize(width, height)
     })
   }
 

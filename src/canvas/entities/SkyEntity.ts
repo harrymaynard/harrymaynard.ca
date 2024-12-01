@@ -1,4 +1,3 @@
-import { BaseEntityCollection } from '@/canvas/entities/BaseEntityCollection'
 import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
 import { BaseEntity } from '@/canvas/entities/BaseEntity'
 
@@ -13,13 +12,13 @@ enum SkyEntryAxisType {
   Y = 1,
 }
 
-export class SkyEntityCollection extends BaseEntityCollection {
+export class SkyEntity extends BaseEntity {
 
   constructor(params) {
     super(params)
 
     // Bind class event listeners.
-    this.handleParticleExit = this.handleParticleExit.bind(this)
+    this._handleParticleExit = this._handleParticleExit.bind(this)
   }
 
   public generateEntities(): void {
@@ -30,9 +29,9 @@ export class SkyEntityCollection extends BaseEntityCollection {
   }
 
   public generateEntity(isOffScreen: boolean = true): void {
-    const xVelocity: number = -(this.getRandomVelocity())
-    const yVelocity: number = this.getRandomVelocity()
-    const entitySize: number = this.getRandomEntitySize()
+    const xVelocity: number = -(this._getRandomVelocity())
+    const yVelocity: number = this._getRandomVelocity()
+    const entitySize: number = this._getRandomEntitySize()
     let x: number
     let y: number
 
@@ -60,6 +59,7 @@ export class SkyEntityCollection extends BaseEntityCollection {
     }
 
     const particle: ParticleEntity = new ParticleEntity({
+      context: this.context,
       x,
       y,
       width: entitySize,
@@ -68,36 +68,29 @@ export class SkyEntityCollection extends BaseEntityCollection {
       yVelocity,
     })
     
-    particle.addEventListener('exit-frame', this.handleParticleExit)
+    particle.addEventListener('exit-frame', this._handleParticleExit)
     
-    particle.setRenderContext(
-      this.context,
-      this.width,
-      this.height
-    )
-    this.addEntity(particle)
+    particle.setViewport(0, 0, this.frameWidth, (this.frameHeight / 2) + 30)
+    particle.setFrameSize(this.frameWidth, this.frameHeight)
+    this.addChild(particle)
   }
 
-  public update() {
-    super.update()
-  }
-
-  private handleParticleExit(event: Event): void {
+  private _handleParticleExit(event: Event): void {
     const entity: BaseEntity = event.target as BaseEntity
     
     const index = this.entities.indexOf(entity)
-    if (index >= 0) {
-      entity.removeEventListener('exit-frame', this.handleParticleExit)
+    if (index > -1) {
+      entity.removeEventListener('exit-frame', this._handleParticleExit)
       this.entities.splice(index, 1)
       this.generateEntity()
     }
   }
 
-  private getRandomVelocity(): number {
+  private _getRandomVelocity(): number {
     return Math.random() * (MAX_PARTICLE_VELOCITY - MIN_PARTICLE_VELOCITY) + MIN_PARTICLE_VELOCITY
   }
 
-  private getRandomEntitySize(): number {
+  private _getRandomEntitySize(): number {
     return Math.floor(Math.random() * (MAX_PARTICLE_SIZE - MIN_PARTICLE_SIZE) + MIN_PARTICLE_SIZE)
   }
 }
