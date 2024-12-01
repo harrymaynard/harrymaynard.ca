@@ -1,4 +1,4 @@
-import { BaseEntity } from '@/canvas/entities/BaseEntity'
+import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 
 const WAVE_COLOR_TOP: string = '#679ebf'
 const WAVE_COLOR_BOTTOM: string = '#FFF'
@@ -7,9 +7,9 @@ const WAVE_HEIGHT: number = 30
 
 /**
  * Represents a wave entity on the canvas.
- * @extends BaseEntity
+ * @extends AbstractEntity
  */
-export class WaveEntity extends BaseEntity {
+export class WaveEntity extends AbstractEntity {
   /**
    * Update the entity's position.
    * @returns void
@@ -18,16 +18,16 @@ export class WaveEntity extends BaseEntity {
     super.update()
 
     // Reset position if it goes beyond full wave width.
-    if (Math.abs(this.x) >= WAVE_WIDTH*2) {
-      this.x = 0
+    if (Math.abs(this.position.x) >= WAVE_WIDTH*2) {
+      this.position.x = 0
     }
   }
 
   /**
-   * Render the entity on the canvas.
+   * draw the entity on the canvas.
    * @returns void
    */
-  public render(): void {
+  public draw(): void {
     const gradient = this.context.createLinearGradient(0, this.frameHeight/2, 0, this.frameHeight)
     gradient.addColorStop(0, WAVE_COLOR_TOP)
     gradient.addColorStop(1, WAVE_COLOR_BOTTOM)
@@ -42,19 +42,19 @@ export class WaveEntity extends BaseEntity {
     // Draw cyclical wave.
     for (let i=-1; i<waveIterationCount; i++) {
       this.context.bezierCurveTo(
-        (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+this.x,
+        (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+this.position.x,
         (this.frameHeight/2),
-        (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+this.x,
+        (WAVE_WIDTH*i*2)+(WAVE_WIDTH/2)+this.position.x,
         (this.frameHeight/2)+WAVE_HEIGHT,
-        (WAVE_WIDTH*i*2)+WAVE_WIDTH+this.x,
+        (WAVE_WIDTH*i*2)+WAVE_WIDTH+this.position.x,
         (this.frameHeight/2)+WAVE_HEIGHT
       )
       this.context.bezierCurveTo(
-        (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+this.x,
+        (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+this.position.x,
         (this.frameHeight/2)+WAVE_HEIGHT,
-        (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+this.x,
+        (WAVE_WIDTH*i*2)+WAVE_WIDTH+(WAVE_WIDTH/2)+this.position.x,
         (this.frameHeight/2),
-        (WAVE_WIDTH*i*2)+(WAVE_WIDTH*2)+this.x,
+        (WAVE_WIDTH*i*2)+(WAVE_WIDTH*2)+this.position.x,
         (this.frameHeight/2)
       )
     }

@@ -22,34 +22,42 @@ onMounted(() => {
   )
 
   // Background entity.
-  renderEngine.addEntity(new BackgroundEntity({
+  const backgroundEntity = new BackgroundEntity({
     context: ctx,
-    x: 0,
-    y: 0,
-    width: document.body.clientWidth,
-    height: document.body.clientHeight
-  }))
+    position: {
+      x: 0,
+      y: 0,
+      width: document.body.clientWidth,
+      height: document.body.clientHeight
+    },
+  })
+  renderEngine.addEntity(backgroundEntity)
 
   // Sky entity.
   const skyEntity = new SkyEntity({
     context: ctx,
-    x: 0,
-    y: 0,
-    width: document.body.clientWidth,
-    height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
+    position: {
+      x: 0,
+      y: 0,
+      width: document.body.clientWidth,
+      height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
+    },
   })
   skyEntity.generateEntities()
   renderEngine.addEntity(skyEntity)
   
   // Wave entity.
-  renderEngine.addEntity(new WaveEntity({
+  const waveEntity = new WaveEntity({
     context: ctx,
-    x: 0,
-    y: document.body.clientHeight / 2,
-    width: document.body.clientWidth,
-    height: document.body.clientHeight,
+    position: {
+      x: 0,
+      y: document.body.clientHeight / 2,
+      width: document.body.clientWidth,
+      height: document.body.clientHeight,
+    },
     xVelocity: -1,
-  }))
+  })
+  renderEngine.addEntity(waveEntity)
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)

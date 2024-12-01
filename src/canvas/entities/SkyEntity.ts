@@ -1,5 +1,5 @@
 import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
-import { BaseEntity } from '@/canvas/entities/BaseEntity'
+import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { EntityEventType } from '@/canvas/enums/EntityEventType'
 
 const SKY_PARTICLE_COUNT: number = 100
@@ -16,7 +16,7 @@ enum SkyEntryAxisType {
 /**
  * SkyEntity class which handles the sky background entities.
  */
-export class SkyEntity extends BaseEntity {
+export class SkyEntity extends AbstractEntity {
 
   constructor(params) {
     super(params)
@@ -25,14 +25,21 @@ export class SkyEntity extends BaseEntity {
     this._handleParticleExit = this._handleParticleExit.bind(this)
   }
 
+  /**
+   * Generate initial entities for the sky.
+   */
   public generateEntities(): void {
     // Create ParticleEntity instances.
     for (let i=0; i<SKY_PARTICLE_COUNT; i++) {
-      this.generateEntity(false)
+      this._generateEntity(false)
     }
   }
 
-  public generateEntity(isOffScreen: boolean = true): void {
+  /**
+   * Generate a new single entity for the sky.
+   * @param isOffScreen 
+   */
+  private _generateEntity(isOffScreen: boolean = true): void {
     const xVelocity: number = -(this._getRandomVelocity())
     const yVelocity: number = this._getRandomVelocity()
     const entitySize: number = this._getRandomEntitySize()
@@ -40,54 +47,78 @@ export class SkyEntity extends BaseEntity {
     let y: number
 
     if (isOffScreen) {
-      const entryAxisTotalLength: number = this.width + this.height
+      const entryAxisTotalLength: number = this.position.width + this.position.height
       const entryAxisPosition: number = Math.floor(Math.random() * entryAxisTotalLength)
       const startingAxis: number
-        = entryAxisTotalLength - entryAxisPosition < this.width
+        = entryAxisTotalLength - entryAxisPosition < this.position.width
           ? SkyEntryAxisType.X
           : SkyEntryAxisType.Y
 
       // X-axis entry.
       if (startingAxis === SkyEntryAxisType.X) {
-        x = (Math.random() * this.width) - entitySize
+        x = (Math.random() * this.position.width) - entitySize
         y = -entitySize
       }
       // Y-axis entry.
       else {
-        x = this.width
-        y = (Math.random() * this.height) - entitySize
+        x = this.position.width
+        y = (Math.random() * this.position.height) - entitySize
       }
     } else {
-      x = (Math.random() * this.width) - entitySize
-      y = (Math.random() * this.height) - entitySize
+      x = (Math.random() * this.position.width) - entitySize
+      y = (Math.random() * this.position.height) - entitySize
     }
 
     const particle: ParticleEntity = new ParticleEntity({
       context: this.context,
-      x,
-      y,
-      width: entitySize,
-      height: entitySize,
+      position: {
+        x,
+        y,
+        width: entitySize,
+        height: entitySize,
+      },
+      viewport: {
+        x: 0,
+        y: 0,
+        width: this.position.width,
+        height: this.position.height,
+      },
       xVelocity,
       yVelocity,
     })
     
     particle.addEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
-    particle.setViewport(0, 0, this.width, this.height)
     this.addChild(particle)
   }
 
+  /**
+   * Empty draw method for the sky entity.
+   */
+  public draw(): void {}
+
+  /**
+   * Handle particle exit event. Removes the particle entity and generates a new one.
+   * @param event 
+   */
   private _handleParticleExit(event: Event): void {
-    const entity: BaseEntity = event.target as BaseEntity
+    const entity: AbstractEntity = event.target as AbstractEntity
     entity.removeEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
     this.removeChild(entity)
-    this.generateEntity()
+    this._generateEntity()
   }
 
+  /**
+   * Get a random velocity for the particle entity.
+   * @returns number
+   */
   private _getRandomVelocity(): number {
     return Math.random() * (MAX_PARTICLE_VELOCITY - MIN_PARTICLE_VELOCITY) + MIN_PARTICLE_VELOCITY
   }
 
+  /**
+   * Get a random size for the particle entity. 
+   * @returns number
+   */
   private _getRandomEntitySize(): number {
     return Math.floor(Math.random() * (MAX_PARTICLE_SIZE - MIN_PARTICLE_SIZE) + MIN_PARTICLE_SIZE)
   }

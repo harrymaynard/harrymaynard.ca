@@ -1,51 +1,42 @@
 import { IEntity } from '@/canvas/interfaces/IEntity'
 import { EntityEventType } from '@/canvas/enums/EntityEventType'
+import { createDefaultViewport } from '@/canvas/helpers/ViewportHelper'
+import { type IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
 
 /**
  * Base class for all entities in the canvas.
  */
-export abstract class BaseEntity extends EventTarget implements IEntity {
+export abstract class AbstractEntity extends EventTarget implements IEntity {
   public context: CanvasRenderingContext2D
   public frameWidth: number = 0
   public frameHeight: number = 0
-  public viewportX: number = 0
-  public viewportY: number = 0
-  public viewportWidth: number = 0
-  public viewportHeight: number = 0
-  public x: number
-  public y: number
-  public width: number
-  public height: number
+  public position: IBoundingBox
+  public viewport: IBoundingBox
   public xVelocity: number
   public yVelocity: number
-  public entities: Array<BaseEntity> = []
+  public entities: Array<AbstractEntity> = []
+  private _isVisible: boolean = false
 
   /**
-   * Create a new BaseEntity.
+   * Create a new AbstractEntity.
    */
   constructor({
     context,
-    x,
-    y,
-    width,
-    height,
+    position,
+    viewport = createDefaultViewport(),
     xVelocity = 0,
     yVelocity = 0,
   }: {
     context: CanvasRenderingContext2D
-    x: number
-    y: number
-    width: number
-    height: number
+    position: IBoundingBox
+    viewport?: IBoundingBox
     xVelocity?: number
     yVelocity?: number
   }) {
     super()
     this.context = context
-    this.x = x
-    this.y = y
-    this.width = width
-    this.height = height
+    this.position = position
+    this.viewport = viewport
     this.xVelocity = xVelocity
     this.yVelocity = yVelocity
   }
@@ -55,10 +46,19 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   public render(): void {
+    // Return early if the entity is not visible.
+    if (!this._isVisible) return
+
+    // Draw the entity.
+    this.draw()
+    
+    // Render child entities.
     this.entities.forEach((entity) => {
       entity.render()
     })
   }
+
+  public abstract draw(): void
   
   /**
    * Update the entity's position.
@@ -66,19 +66,19 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    */
   public update(): void {
     // Check if entity was visible in the previous frame.
-    const wasVisible: boolean = this.isWithinViewport()
+    const wasVisible: boolean = this._isVisible
 
     // Update the entity's position.
-    this.x += this.xVelocity || 0
-    this.y += this.yVelocity || 0
+    this.position.x += this.xVelocity || 0
+    this.position.y += this.yVelocity || 0
 
     // Check if entity is visible in the current frame.
-    const isVisible: boolean = this.isWithinViewport()
+    this._isVisible = this.isWithinViewport()
 
     // Dispatch the 'EntityEventType.EnterFrame' or 'EntityEventType.ExitFrame' events.
-    if (!wasVisible && isVisible) {
+    if (!wasVisible && this._isVisible) {
       this.dispatchEvent(new Event(EntityEventType.EnterFrame))
-    } else if (wasVisible && !isVisible) {
+    } else if (wasVisible && !this._isVisible) {
       this.dispatchEvent(new Event(EntityEventType.ExitFrame))
     }
 
@@ -92,7 +92,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * Add a child entity.
    * @param entity 
    */
-  public addChild(entity: BaseEntity): void {
+  public addChild(entity: AbstractEntity): void {
     if (this.frameWidth && this.frameHeight) {
       entity.setFrameSize(this.frameWidth, this.frameHeight)
     }
@@ -103,7 +103,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * Remove a child entity.
    * @param entity 
    */
-  public removeChild(entity: BaseEntity): void {
+  public removeChild(entity: AbstractEntity): void {
     const index = this.entities.indexOf(entity)
     if (index > -1) {
       this.entities.splice(index, 1)
@@ -116,7 +116,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   protected setX(x: number): void {
-    this.x = x
+    this.position.x = x
   }
 
   /**
@@ -125,7 +125,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   protected setY(y: number): void {
-    this.y = y
+    this.position.y = y
   }
 
   /**
@@ -134,7 +134,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   public setWidth(width: number): void {
-    this.width = width
+    this.position.width = width
   }
 
   /**
@@ -143,7 +143,7 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   public setHeight(height: number): void {
-    this.height = height
+    this.position.height = height
   }
   
   /**
@@ -203,16 +203,8 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @param height 
    * @returns void
    */
-  public setViewport(
-    x: number,
-    y: number,
-    width: number,
-    height: number
-  ): void {
-    this.viewportX = x
-    this.viewportY = y
-    this.viewportWidth = width
-    this.viewportHeight = height
+  public setViewport(viewport: IBoundingBox): void {
+    this.viewport = viewport
   }
 
   /**
@@ -229,10 +221,10 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
 
   public isWithinViewport(): boolean {
     return (
-      this.x + this.width > this.viewportX &&
-      this.x < this.viewportWidth &&
-      this.y + this.height > this.viewportY &&
-      this.y < this.viewportHeight
+      this.position.x + this.position.width > this.viewport.x &&
+      this.position.x < this.viewport.width &&
+      this.position.y + this.position.height > this.viewport.y &&
+      this.position.y < this.viewport.height
     )
   }
 }

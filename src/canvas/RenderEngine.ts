@@ -1,4 +1,4 @@
-import { BaseEntity } from './entities/BaseEntity'
+import { AbstractEntity } from './entities/AbstractEntity'
 
 /**
  * Represents the render engine for a canvas.
@@ -8,7 +8,7 @@ export class RenderEngine {
   private _context: CanvasRenderingContext2D | undefined
   private _frameWidth: number | undefined
   private _frameHeight: number | undefined
-  private readonly _entities: Array<BaseEntity> = []
+  private readonly _entities: Array<AbstractEntity> = []
   
   /**
    * Updates all entities in the render engine instance.
@@ -43,7 +43,7 @@ export class RenderEngine {
    * @param entity The entity to add.
    * @returns void
    */
-  public addEntity(entity: BaseEntity): void {
+  public addEntity(entity: AbstractEntity): void {
     if (this.isRenderContextValid()) {
       // @ts-expect-error - TS2532: Object is possibly 'undefined'.
       entity.setRenderContext(this._context)
