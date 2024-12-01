@@ -1,8 +1,8 @@
+import { type IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
+
 export interface IEntity {
-  x: number
-  y: number
-  width: number
-  height: number
+  position: IBoundingBox
+  viewport: IBoundingBox
   xVelocity?: number
   yVelocity?: number
   context?: CanvasRenderingContext2D
