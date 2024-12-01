@@ -1,4 +1,5 @@
 import { IEntity } from '@/canvas/interfaces/IEntity'
+import { EntityEventType } from '@/canvas/enums/EntityEventType'
 
 /**
  * Base class for all entities in the canvas.
@@ -64,9 +65,24 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @returns void
    */
   public update(): void {
+    // Check if entity was visible in the previous frame.
+    const wasVisible: boolean = this.isWithinViewport()
+
+    // Update the entity's position.
     this.x += this.xVelocity || 0
     this.y += this.yVelocity || 0
 
+    // Check if entity is visible in the current frame.
+    const isVisible: boolean = this.isWithinViewport()
+
+    // Dispatch the 'EntityEventType.EnterFrame' or 'EntityEventType.ExitFrame' events.
+    if (!wasVisible && isVisible) {
+      this.dispatchEvent(new Event(EntityEventType.EnterFrame))
+    } else if (wasVisible && !isVisible) {
+      this.dispatchEvent(new Event(EntityEventType.ExitFrame))
+    }
+
+    // Update child entities.
     this.entities.forEach((entity) => {
       entity.update()
     })
@@ -77,6 +93,9 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
    * @param entity 
    */
   public addChild(entity: BaseEntity): void {
+    if (this.frameWidth && this.frameHeight) {
+      entity.setFrameSize(this.frameWidth, this.frameHeight)
+    }
     this.entities.push(entity)
   }
 
@@ -205,6 +224,15 @@ export abstract class BaseEntity extends EventTarget implements IEntity {
       !!this.context &&
       !!this.frameWidth &&
       !!this.frameHeight
+    )
+  }
+
+  public isWithinViewport(): boolean {
+    return (
+      this.x + this.width > this.viewportX &&
+      this.x < this.viewportWidth &&
+      this.y + this.height > this.viewportY &&
+      this.y < this.viewportHeight
     )
   }
 }

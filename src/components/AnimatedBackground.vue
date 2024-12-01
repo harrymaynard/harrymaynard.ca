@@ -22,20 +22,28 @@ onMounted(() => {
   )
 
   // Background entity.
-  renderEngine.addEntity(new BackgroundEntity())
+  renderEngine.addEntity(new BackgroundEntity({
+    context: ctx,
+    x: 0,
+    y: 0,
+    width: document.body.clientWidth,
+    height: document.body.clientHeight
+  }))
 
   // Sky entity.
   const skyEntity = new SkyEntity({
+    context: ctx,
     x: 0,
     y: 0,
     width: document.body.clientWidth,
     height: (document.body.clientHeight / 2) + 30, // 30 for wave height.
   })
-  renderEngine.addEntity(skyEntity)
   skyEntity.generateEntities()
+  renderEngine.addEntity(skyEntity)
   
   // Wave entity.
   renderEngine.addEntity(new WaveEntity({
+    context: ctx,
     x: 0,
     y: document.body.clientHeight / 2,
     width: document.body.clientWidth,
@@ -59,8 +67,7 @@ onBeforeUnmount(() => {
 
 // Set canvas size, and scale according to pixel density.
 const setCanvasSize = () => {
-  // Set render context and frame size.
-  renderEngine.setRenderContext(ctx)
+  // Set frame size after resize.
   renderEngine.setFrameSize(
     document.body.clientWidth,
     document.body.clientHeight

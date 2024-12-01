@@ -1,5 +1,6 @@
 import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
 import { BaseEntity } from '@/canvas/entities/BaseEntity'
+import { EntityEventType } from '@/canvas/enums/EntityEventType'
 
 const SKY_PARTICLE_COUNT: number = 100
 const MIN_PARTICLE_VELOCITY: number = 0.1
@@ -12,6 +13,9 @@ enum SkyEntryAxisType {
   Y = 1,
 }
 
+/**
+ * SkyEntity class which handles the sky background entities.
+ */
 export class SkyEntity extends BaseEntity {
 
   constructor(params) {
@@ -68,22 +72,16 @@ export class SkyEntity extends BaseEntity {
       yVelocity,
     })
     
-    particle.addEventListener('exit-frame', this._handleParticleExit)
-    
-    particle.setViewport(0, 0, this.frameWidth, (this.frameHeight / 2) + 30)
-    particle.setFrameSize(this.frameWidth, this.frameHeight)
+    particle.addEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
+    particle.setViewport(0, 0, this.width, this.height)
     this.addChild(particle)
   }
 
   private _handleParticleExit(event: Event): void {
     const entity: BaseEntity = event.target as BaseEntity
-    
-    const index = this.entities.indexOf(entity)
-    if (index > -1) {
-      entity.removeEventListener('exit-frame', this._handleParticleExit)
-      this.entities.splice(index, 1)
-      this.generateEntity()
-    }
+    entity.removeEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
+    this.removeChild(entity)
+    this.generateEntity()
   }
 
   private _getRandomVelocity(): number {

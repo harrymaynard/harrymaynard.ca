@@ -10,35 +10,6 @@ const WAVE_HEIGHT: number = 30
  * @extends BaseEntity
  */
 export class WaveEntity extends BaseEntity {
-  
-  /**
-   * Create a new WaveEntity.
-   */
-  constructor({
-    x,
-    y,
-    width,
-    height,
-    xVelocity,
-    yVelocity,
-  }: {
-    x: number
-    y: number
-    width: number
-    height: number
-    xVelocity?: number
-    yVelocity?: number
-  } = {
-    x: 0,
-    y: 0,
-    width: document.body.clientWidth,
-    height: document.body.clientHeight,
-    xVelocity: 0,
-    yVelocity: 0,
-  }) {
-    super({ x, y, width, height, xVelocity, yVelocity })
-  }
-
   /**
    * Update the entity's position.
    * @returns void
