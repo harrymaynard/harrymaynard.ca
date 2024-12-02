@@ -1,4 +1,3 @@
-
 /**
  * Get random number in range.
  * @param min 

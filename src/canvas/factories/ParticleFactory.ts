@@ -82,6 +82,13 @@ export class ParticleFactory {
     }
   }
 
+  /**
+   * Get the starting coordinates for the entity.
+   * @param enterType 
+   * @param width 
+   * @param height 
+   * @returns 
+   */
   private _getEntityStartingCoordinates(
     enterType: ParticleFactoryEnterType,
     width: number,
@@ -111,6 +118,12 @@ export class ParticleFactory {
     }
   }
 
+  /**
+   * Get random edge coordinates for the particle.
+   * @param particleWidth 
+   * @param particleHeight 
+   * @returns 
+   */
   private _getRandomEdgeCoordinates(
     particleWidth: number,
     particleHeight: number
@@ -171,6 +184,11 @@ export class ParticleFactory {
     }
   }
 
+  /**
+   * Get the side length by side type.
+   * @param side 
+   * @returns 
+   */
   public _getSideLengthByType(side: BoxSideType): number {
     switch (side) {
       case BoxSideType.Top:
