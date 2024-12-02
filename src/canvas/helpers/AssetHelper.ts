@@ -3,10 +3,10 @@ import { IAsset } from '../interfaces/IAsset'
 
 /**
  * Load image assets.
- * @returns Promise<Map<string, HTMLImageElement>>
+ * @returns Promise<Map<string, any>>
  */
-export const loadAssets = async (assets: Array<IAsset>): Promise<Map<string, HTMLImageElement>> => {
-  const imageAssetMap = new Map<string, HTMLImageElement>()
+export const loadAssets = async (assets: Array<IAsset>): Promise<Map<string, any>> => {
+  const imageAssetMap = new Map<string, any>()
   const imageLoadPromises: Array<Promise<void>> = []
 
   for (const index in assets) {
