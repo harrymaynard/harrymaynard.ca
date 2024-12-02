@@ -1,6 +1,6 @@
 import { type BoxSideType } from '@/canvas/enums/BoxSideType'
-import { type IRangeVector } from '@/canvas/interfaces/IRangeVector'
+import { type IVelocityVectorRange } from '@/canvas/interfaces/IVelocityVectorRange'
 
-export interface IEnterRangeVector extends IRangeVector {
+export interface IEnterRangeVector extends IVelocityVectorRange {
   side: BoxSideType
 }
