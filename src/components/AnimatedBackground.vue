@@ -1,9 +1,15 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RootEntity } from '@/canvas/entities/RootEntity'
+import { useWeatherService } from '@/weather/services/WeatherService'
+import { type IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
+
+const weatherService = useWeatherService()
+
+const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
+const weather = ref<IWeatherResponseDTO>()
 
 let isComponentMounted: boolean = false
-const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
 let context: CanvasRenderingContext2D
 let rootEntity: RootEntity
 
@@ -23,6 +29,7 @@ onMounted(() => {
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
+  fetchWeather()
 
   isComponentMounted = true
 
@@ -35,7 +42,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', setCanvasSize)
 })
 
-// Set canvas size, and scale according to pixel density.
+/**
+ * Set canvas size and scale according to pixel density.
+ */
 const setCanvasSize = () => {
   // Set frame size after resize.
   rootEntity.setFrameSize(
@@ -56,6 +65,9 @@ const setCanvasSize = () => {
   context.scale(scale, scale)
 }
 
+/**
+ * Render loop that updates entities and renders frame.
+ */
 const handleNextFrame = () => {
   // Exit render loop if component is unmounted.
   if (!isComponentMounted) return
@@ -66,6 +78,17 @@ const handleNextFrame = () => {
   
   // Request next animation frame.
   window.requestAnimationFrame(handleNextFrame)
+}
+
+/**
+ * Fetch weather data from the API.
+ */
+const fetchWeather = async () => {
+  try {
+    weather.value = await weatherService.getWeather()
+  } catch (error) {
+    console.error('Failed to fetch weather data:', error)
+  }
 }
 </script>
 
