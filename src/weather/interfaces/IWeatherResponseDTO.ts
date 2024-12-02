@@ -1,4 +1,4 @@
-export interface IWeatherResponseDTO{
+export interface IWeatherResponseDTO {
   weather: {
     categories: Array<{
       code: number

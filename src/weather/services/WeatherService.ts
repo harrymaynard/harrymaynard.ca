@@ -1,4 +1,5 @@
-import { IWeatherResponseDTO } from './interfaces/IWeatherResponseDTO'
+import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
+import { WeatherFactory } from '../factories/WeatherFactory'
 
 /**
  * Controller for the weather.
@@ -15,11 +16,16 @@ export class WeatherService {
    * @returns IWeatherResponseDTO | null
    */
   public async getWeather(): Promise<IWeatherResponseDTO | null> {
+    let weather: IWeatherResponseDTO | null = null
+
     if (this._localStorageWeather) {
-      return Promise.resolve(this._localStorageWeather)
+      weather = this._localStorageWeather
+    } else {
+      weather = WeatherFactory.createMockWeather()
     }
     // TODO: Fetch the weather data from the API.
-    return Promise.resolve(null)
+    
+    return Promise.resolve(weather)
   }
 
   /**
@@ -48,7 +54,7 @@ let weatherService: WeatherService
  * Get the weather controller.
  * @returns WeatherController
  */
-export const useWeather = () => {
+export const useWeatherService = () => {
   if (!weatherService) {
     weatherService = new WeatherService()
   }

@@ -1,4 +1,5 @@
 import { WeatherCodeType } from '../enums/WeatherCodeType'
+import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
 
 export class WeatherFactory {
   /**
@@ -21,6 +22,7 @@ export class WeatherFactory {
       case 231:
       case 232:
         return WeatherCodeType.Thunderstorm
+
       // Drizzle.
       case 300:
       case 301:
@@ -32,6 +34,7 @@ export class WeatherFactory {
       case 314:
       case 321:
         return WeatherCodeType.Drizzle
+
       // Rain.
       case 500:
       case 501:
@@ -44,6 +47,7 @@ export class WeatherFactory {
       case 522:
       case 531:
         return WeatherCodeType.Rain
+
       // Snow.
       case 600:
       case 601:
@@ -57,6 +61,7 @@ export class WeatherFactory {
       case 621:
       case 622:
         return WeatherCodeType.Snow
+
       // Atmosphere.
       case 701:
         return WeatherCodeType.Mist
@@ -77,18 +82,59 @@ export class WeatherFactory {
         return WeatherCodeType.Squall
       case 781:
         return WeatherCodeType.Tornado
+
       // Clear.
       case 800:
         return WeatherCodeType.Clear
+
       // Clouds.
       case 801:
       case 802:
       case 803:
       case 804:
         return WeatherCodeType.Clouds
+
       // Everything else.
       default:
         return WeatherCodeType.Unknown
     }
+  }
+
+  /**
+   * Create a mock weather object.
+   * Used to developing the UI without making API calls.
+   * @returns IWeatherResponseDTO
+   */
+  public static createMockWeather(): IWeatherResponseDTO {
+    const weatherData: IWeatherResponseDTO = {
+      weather: {
+        categories: [
+          {
+            code: 802,
+            title: WeatherCodeType.Clouds,
+            description: 'scattered clouds',
+          }
+        ],
+        temperature: 6.85,
+        feelsLike: 3.82,
+        temperatureMin: 5.35,
+        temperatureMax: 8.06,
+        pressure: 1024,
+        humidity: 88,
+        seaLevel: 1024,
+        visibility: 10000,
+        windSpeed: 4.63,
+        windDegrees: 130,
+        cloudCoverage: 40,
+      },
+      geo: {
+        country: 'CA',
+        city: 'Victoria',
+        sunrise: 1733067877,
+        sunset: 1733098859,
+        timezone: -28800,
+      }
+    }
+    return weatherData
   }
 }
