@@ -1,12 +1,12 @@
-import { ParticleEntity } from '@/canvas/entities/ParticleEntity'
+import { SnowflakeParticleEntity } from '@/canvas/entities/SnowflakeParticleEntity'
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { EntityEventType } from '@/canvas/enums/EntityEventType'
 
-const SKY_PARTICLE_COUNT: number = 100
+const SKY_PARTICLE_COUNT: number = 25
 const MIN_PARTICLE_VELOCITY: number = 0.1
 const MAX_PARTICLE_VELOCITY: number = 0.5
-const MIN_PARTICLE_SIZE: number = 5
-const MAX_PARTICLE_SIZE: number = 10
+const MIN_PARTICLE_SIZE: number = 20
+const MAX_PARTICLE_SIZE: number = 40
 
 enum SkyEntryAxisType {
   X = 0,
@@ -69,7 +69,7 @@ export class SkyEntity extends AbstractEntity {
       y = (Math.random() * this.position.height) - entitySize
     }
 
-    const particle: ParticleEntity = new ParticleEntity({
+    const particle: SnowflakeParticleEntity = new SnowflakeParticleEntity({
       context: this.context,
       position: {
         x,
