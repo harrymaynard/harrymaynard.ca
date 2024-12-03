@@ -17,6 +17,9 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   public entities: Array<AbstractEntity> = []
   private _isVisible: boolean = false
 
+  protected static isAssetsLoaded: boolean = false
+  protected static assets: Map<string, any>
+
   /**
    * Create a new AbstractEntity.
    */
@@ -219,6 +222,10 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     )
   }
 
+  /**
+   * Returns a boolean indicating whether the entity is within the viewport.
+   * @returns boolean
+   */
   public isWithinViewport(): boolean {
     return (
       this.position.x + this.position.width > this.viewport.x &&
