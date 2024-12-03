@@ -1,29 +1,45 @@
-// import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
-// import { AbstractEntity } from '../entities/AbstractEntity'
+import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
+import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
+import { SnowSkyEntity } from '@/canvas/entities/SnowSkyEntity'
 
 export class WeatherEntityFactory {
-  private static _context: CanvasRenderingContext2D
+  private _parentEntity: AbstractEntity
 
   constructor({
-    context,
+    parentEntity,
   }: {
-    context: CanvasRenderingContext2D
+    parentEntity: AbstractEntity
   }) {
-    WeatherEntityFactory._context = context
+    this._parentEntity = parentEntity
   }
 
-  // public createEntity(weatherCodeType: WeatherCodeType): AbstractEntity {
-  //   switch (weatherCodeType) {
-  //     case WeatherCodeType.Snow:
-  //       return new SnowEntity({
-  //         context: WeatherEntityFactory._context,
-  //         position: {
-  //           x: 0,
-  //           y: 0,
-  //           width: 0,
-  //           height: 0,
-  //         },
-  //       })
-  //   }
-  // }
+  /**
+   * Create a new weather entity.
+   * @param weatherCodeType 
+   * @returns AbstractEntity
+   */
+  public create(
+    weatherCodeType: WeatherCodeType
+  ): AbstractEntity | null {
+    switch (weatherCodeType) {
+      case WeatherCodeType.Snow:
+        return new SnowSkyEntity({
+          context: this._parentEntity.context,
+          position: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: (this._parentEntity.position.height / 2) + 30,
+          },
+          viewport: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: this._parentEntity.position.height,
+          },
+        })
+      default:
+        return null
+    }
+  }
 }

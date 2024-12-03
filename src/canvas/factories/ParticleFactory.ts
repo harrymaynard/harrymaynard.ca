@@ -29,11 +29,11 @@ export class ParticleFactory {
    */
   public create({
     count = 1,
-    enterType = ParticleFactoryEnterType.Center,
+    enterType = ParticleFactoryEnterType.Edge,
   }: {
     count?: number,
     enterType?: ParticleFactoryEnterType,
-  }): void {
+  } = {}): void {
     for (let i = 0; i < count; i++) {
       const entitySize: number = getRandomNumberInRange(
         this._createOptions.sizeRange.min,

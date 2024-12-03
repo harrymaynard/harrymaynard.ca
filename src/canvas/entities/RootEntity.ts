@@ -1,7 +1,8 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { BackgroundEntity } from '@/canvas/entities/BackgroundEntity'
 import { WaveEntity } from '@/canvas/entities/WaveEntity'
-import { SkyEntity } from '@/canvas/entities/SkyEntity'
+import { WeatherEntityFactory } from '@/canvas/factories/WeatherEntityFactory'
+import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
 import { type IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
 
 /**
@@ -44,17 +45,13 @@ export class RootEntity extends AbstractEntity {
     this.addChild(backgroundEntity)
 
     // Sky entity.
-    const skyEntity = new SkyEntity({
-      context,
-      position: {
-        x: position.x,
-        y: position.y,
-        width: position.width,
-        height: (position.height / 2) + 30, // 30 for wave height.
-      },
+    const weatherEntityFactory = new WeatherEntityFactory({
+      parentEntity: this,
     })
-    skyEntity.generateEntities()
-    this.addChild(skyEntity)
+    const skyEntity = weatherEntityFactory.create(WeatherCodeType.Snow)
+    if (skyEntity) {
+      this.addChild(skyEntity)
+    }
     
     // Wave entity.
     const waveEntity = new WaveEntity({
