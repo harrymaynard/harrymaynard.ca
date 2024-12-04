@@ -228,10 +228,10 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    */
   public isWithinViewport(): boolean {
     return (
-      this.position.x + this.position.width > this.viewport.x &&
-      this.position.x < this.viewport.width &&
-      this.position.y + this.position.height > this.viewport.y &&
-      this.position.y < this.viewport.height
+      this.position.x + this.position.width > this.viewport.x && // Right edge is visible.
+      this.position.x < this.viewport.width && // Left edge is visible.
+      this.position.y + this.position.height > this.viewport.y && // Bottom edge is visible.
+      this.position.y < this.viewport.height // Top edge is visible.
     )
   }
 }

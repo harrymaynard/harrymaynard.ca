@@ -10,6 +10,11 @@ const WAVE_HEIGHT: number = 30
  * @extends AbstractEntity
  */
 export class WaveEntity extends AbstractEntity {
+  constructor(params) {
+    super(params)
+    this.setWidth(WAVE_WIDTH * 2)
+  }
+
   /**
    * Update the entity's position.
    * @returns void
@@ -18,7 +23,7 @@ export class WaveEntity extends AbstractEntity {
     super.update()
 
     // Reset position if it goes beyond full wave width.
-    if (Math.abs(this.position.x) >= WAVE_WIDTH*2) {
+    if (Math.abs(this.position.x) >= WAVE_WIDTH * 2 - 1) {
       this.position.x = 0
     }
   }
