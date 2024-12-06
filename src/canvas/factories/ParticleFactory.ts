@@ -47,6 +47,10 @@ export class ParticleFactory {
         this._createOptions.velocityVectorRange.minYVelocity,
         this._createOptions.velocityVectorRange.maxYVelocity
       )
+      const rotationVelocity: number = getRandomNumberInRange(
+        this._createOptions.velocityVectorRange.minRotationVelocity || 0,
+        this._createOptions.velocityVectorRange.maxRotationVelocity || 0
+      )
 
       const coordinates: ICoordinates = this._getEntityStartingCoordinates(
         enterType,
@@ -70,6 +74,7 @@ export class ParticleFactory {
         },
         xVelocity,
         yVelocity,
+        rotationVelocity,
       })
 
       if (this._createOptions?.enterListener) {

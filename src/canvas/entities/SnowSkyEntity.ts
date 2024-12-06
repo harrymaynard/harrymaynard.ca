@@ -8,6 +8,8 @@ import { BoxSideType } from '@/canvas/enums/BoxSideType'
 const SKY_PARTICLE_COUNT: number = 25
 const MIN_PARTICLE_VELOCITY: number = 0.1
 const MAX_PARTICLE_VELOCITY: number = 0.5
+const MIN_PARTICLE_ROTATION_VELOCITY: number = -0.8
+const MAX_PARTICLE_ROTATION_VELOCITY: number = 0.8
 const MIN_PARTICLE_SIZE: number = 20
 const MAX_PARTICLE_SIZE: number = 40
 
@@ -37,6 +39,8 @@ export class SnowSkyEntity extends AbstractEntity {
           maxXVelocity: -MAX_PARTICLE_VELOCITY,
           minYVelocity: MIN_PARTICLE_VELOCITY,
           maxYVelocity: MAX_PARTICLE_VELOCITY,
+          minRotationVelocity: MIN_PARTICLE_ROTATION_VELOCITY,
+          maxRotationVelocity: MAX_PARTICLE_ROTATION_VELOCITY,
         },
         edgeEntryVectors: [
           {

@@ -14,6 +14,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   public viewport: IBoundingBox
   public xVelocity: number
   public yVelocity: number
+  public rotationVelocity: number
   public entities: Array<AbstractEntity> = []
   private _isVisible: boolean = false
 
@@ -29,12 +30,14 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     viewport = createDefaultViewport(),
     xVelocity = 0,
     yVelocity = 0,
+    rotationVelocity = 0
   }: {
     context: CanvasRenderingContext2D
     position: IBoundingBox
     viewport?: IBoundingBox
     xVelocity?: number
     yVelocity?: number
+    rotationVelocity?: number
   }) {
     super()
     this.context = context
@@ -42,6 +45,11 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     this.viewport = viewport
     this.xVelocity = xVelocity
     this.yVelocity = yVelocity
+    this.rotationVelocity = rotationVelocity
+
+    if (!this.position.rotation) {
+      this.position.rotation = 0
+    }
   }
 
   /**
@@ -74,6 +82,9 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     // Update the entity's position.
     this.position.x += this.xVelocity || 0
     this.position.y += this.yVelocity || 0
+    this.position.rotation = this.rotationVelocity
+      ? (this.position.rotation || 0) + this.rotationVelocity
+      : this.position.rotation
 
     // Check if entity is visible in the current frame.
     this._isVisible = this.isWithinViewport()

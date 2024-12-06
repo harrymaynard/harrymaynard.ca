@@ -3,4 +3,6 @@ export interface IVelocityVectorRange {
   maxXVelocity: number
   minYVelocity: number
   maxYVelocity: number
+  minRotationVelocity?: number
+  maxRotationVelocity?: number
 }
