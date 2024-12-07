@@ -7,7 +7,7 @@
 <style lang="scss">
 @font-face {
   font-family:"Linux Libertine";
-  src: url("/fonts/LinLibertine_R.ttf");
+  src: url("/fonts/LibertinusSerif-Regular.woff2") format("woff2");
 }
 * {
   margin: 0;

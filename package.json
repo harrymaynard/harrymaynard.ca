@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
-    "preview": "vite preview --port 3000",
+    "preview": "vite preview --port 3000 --host",
     "test:unit": "vitest",
     "test:unit:coverage": "vitest run --coverage",
     "lint": "eslint 'src/**/*.{ts,vue}'"
