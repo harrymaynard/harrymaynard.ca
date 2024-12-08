@@ -48,3 +48,13 @@ export const loadImage = (url: string): Promise<HTMLImageElement> => {
     image.src = url
   })
 }
+
+/**
+ * Get a random asset key from the given assets.
+ * @param assets 
+ * @returns string
+ */
+export const getRandomAssetKey = <T>(assets: Array<string>): T => {
+  const randomIndex = Math.floor(Math.random() * assets.length)
+  return assets[randomIndex] as T
+}
