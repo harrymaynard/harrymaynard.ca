@@ -33,8 +33,8 @@ export class MoonEntity extends AbstractEntity {
     if (image) {
       this.context.drawImage(
         image,
-        0,
-        0,
+        this.position.x,
+        this.position.y,
         this.position.width,
         this.position.height
       )

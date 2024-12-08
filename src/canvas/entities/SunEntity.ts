@@ -10,12 +10,14 @@ export class SunEntity extends AbstractEntity {
    * @returns void
    */
   public draw(): void {
+    const radius: number = this.position.width / 2
+
     this.context.fillStyle = '#FFCC33'
     this.context.beginPath()
     this.context.arc(
-      this.position.x + this.position.width / 2,
-      this.position.y + this.position.height / 2,
-      50,
+      this.position.x + radius,
+      this.position.y + radius,
+      radius,
       0,
       Math.PI * 2
     )
