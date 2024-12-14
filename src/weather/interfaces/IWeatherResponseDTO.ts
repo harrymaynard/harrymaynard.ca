@@ -1,6 +1,6 @@
 export interface IWeatherResponseDTO {
   weather: {
-    categories: Array<{
+    conditions: Array<{
       code: number
       title: string
       description: string

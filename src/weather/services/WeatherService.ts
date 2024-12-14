@@ -1,50 +1,35 @@
 import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
-import { WeatherFactory } from '../factories/WeatherFactory'
+import { APIClient } from '@/services/APIClient'
+import { WeatherFactory } from '@/weather/factories/WeatherFactory'
 
 /**
  * Controller for the weather.
  */
 export class WeatherService {
-  private _localStorageWeather: IWeatherResponseDTO | null = null
-
-  constructor() {
-    this._localStorageWeather = this._getLocalStorageWeather()
-  }
+  private _cachedWeatherData: IWeatherResponseDTO | null = null
 
   /**
    * Get the weather data.
    * @returns IWeatherResponseDTO | null
    */
-  public async getWeather(): Promise<IWeatherResponseDTO | null> {
-    let weather: IWeatherResponseDTO | null = null
+  public async getWeather(): Promise<IWeatherResponseDTO> {
+    let weather: IWeatherResponseDTO | undefined = undefined
 
-    if (this._localStorageWeather) {
-      weather = this._localStorageWeather
+    if (this._cachedWeatherData) {
+      weather = this._cachedWeatherData
     } else {
-      weather = WeatherFactory.createMockWeather()
-    }
-    // TODO: Fetch the weather data from the API.
-    
-    return Promise.resolve(weather)
-  }
-
-  /**
-   * Load the weather data from local storage.
-   * @returns IWeatherResponseDTO | null
-   */
-  private _getLocalStorageWeather(): IWeatherResponseDTO | null {
-    const weatherJSON = localStorage.getItem('weather')
-    let weather: IWeatherResponseDTO | null = null
-
-    if (weatherJSON) {
       try {
-        weather = JSON.parse(weatherJSON)
-        console.log('Weather data loaded from local storage:', weather)
+        const { data } = await APIClient.getWeather()
+        weather = this._cachedWeatherData = data
       } catch (error) {
-        console.error('Error parsing weather data from local storage:', error)
+        console.error(error)
       }
     }
-    return weather
+    if (!weather) {
+      weather = WeatherFactory.createMockWeather()
+    }
+    
+    return Promise.resolve(weather)
   }
 }
 
