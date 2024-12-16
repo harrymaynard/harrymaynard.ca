@@ -12,7 +12,7 @@ export class RESTClient {
    * @param url The URL. Must begin with a forward slash.
    * @returns The response.
    */
-  public static async get<T>(url: string): Promise<AxiosResponse<T>> {
+  public static get<T>(url: string): Promise<AxiosResponse<T>> {
     return axios.get<T>(`${API_BASE_URL}${url}`)
   }
 }

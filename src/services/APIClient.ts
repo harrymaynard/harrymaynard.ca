@@ -11,7 +11,7 @@ export class APIClient {
    * Get the current weather.
    * @returns The current weather.
    */
-  public static async getWeather(): Promise<AxiosResponse<IWeatherResponseDTO>> {
+  public static getWeather(): Promise<AxiosResponse<IWeatherResponseDTO>> {
     return RESTClient.get<IWeatherResponseDTO>(`/v1/weather`)
   }
 }
