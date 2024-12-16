@@ -108,7 +108,7 @@ export class WeatherFactory {
   public static createMockWeather(): IWeatherResponseDTO {
     const weatherData: IWeatherResponseDTO = {
       weather: {
-        categories: [
+        conditions: [
           {
             code: 802,
             title: WeatherCodeType.Clouds,

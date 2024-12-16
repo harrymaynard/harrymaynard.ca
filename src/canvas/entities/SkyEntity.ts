@@ -34,6 +34,7 @@ export class SkyEntity extends AbstractEntity {
       this.addChild(skyEntity)
     }
   }
+
   /**
    * Empty draw method for the sky entity.
    */
