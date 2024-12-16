@@ -1,13 +1,8 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RootEntity } from '@/canvas/entities/RootEntity'
-import { useWeatherService } from '@/weather/services/WeatherService'
-import { type IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
-
-const weatherService = useWeatherService()
 
 const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
-const weather = ref<IWeatherResponseDTO>()
 
 let isComponentMounted: boolean = false
 let context: CanvasRenderingContext2D
@@ -29,7 +24,6 @@ onMounted(() => {
 
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
-  fetchWeather()
 
   isComponentMounted = true
 
@@ -78,17 +72,6 @@ const handleNextFrame = () => {
   
   // Request next animation frame.
   window.requestAnimationFrame(handleNextFrame)
-}
-
-/**
- * Fetch weather data from the API.
- */
-const fetchWeather = async () => {
-  try {
-    weather.value = await weatherService.getWeather()
-  } catch (error) {
-    console.error('Failed to fetch weather data:', error)
-  }
 }
 </script>
 
