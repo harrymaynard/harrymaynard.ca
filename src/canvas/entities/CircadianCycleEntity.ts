@@ -5,6 +5,7 @@ import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { useWeatherService, WeatherService } from '@/weather/services/WeatherService'
 
 const PLANET_SIZE: number = 100
+const SINGLE_DAY_DURATION: number = 24 * 60 * 60 * 1000
 
 enum CircadianCycleType {
   Day = 'day',
@@ -139,7 +140,7 @@ export class CircadianCycleEntity extends AbstractEntity {
         )) * this.position.height
 
       case CircadianCycleType.Night:
-        planetDisplayDuration = Math.abs(sunriseTime - sunsetTime)
+        planetDisplayDuration = Math.abs(sunsetTime - sunriseTime - SINGLE_DAY_DURATION)
         return (1 - Math.sin(
           (Math.PI * (Date.now() - sunsetTime)) / planetDisplayDuration
         )) * this.position.height
