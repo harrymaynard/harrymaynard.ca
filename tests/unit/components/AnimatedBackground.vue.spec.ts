@@ -4,7 +4,7 @@ import AnimatedBackground from '@/components/AnimatedBackground.vue'
 
 vi.mock('axios', () => ({
   default: {
-    get: vi.fn(() => new Promise((resolve) => resolve({ data: {} }))),
+    get: vi.fn(() => new Promise((resolve) => resolve({ data: null }))),
   },
 }))
 
