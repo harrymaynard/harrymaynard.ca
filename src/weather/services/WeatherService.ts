@@ -1,17 +1,14 @@
-import { type AxiosResponse } from 'axios'
 import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
 import { APIClient } from '@/services/APIClient'
-import { WeatherFactory } from '@/weather/factories/WeatherFactory'
 
-const WEATHER_POLLING_INTERVAL: number = 60 * 60 * 1000 // 1 hour
+const WEATHER_POLLING_INTERVAL: number = 15 * 60 * 1000 // 15 minutes.
 
 /**
  * Controller for the weather.
  */
 export class WeatherService {
   private _cachedWeatherData: IWeatherResponseDTO | null = null
-  private _weatherRequestPromise: Promise<AxiosResponse<IWeatherResponseDTO>> | null = null
-
+  
   constructor() {
     this.getWeather = this.getWeather.bind(this)
 
@@ -20,42 +17,33 @@ export class WeatherService {
 
   /**
    * Get the weather data.
-   * @returns Promise<IWeatherResponseDTO>
+   * @returns IWeatherResponseDTO
    */
-  public async getWeather(): Promise<IWeatherResponseDTO> {
-    let weather: IWeatherResponseDTO | undefined = undefined
-
-    if (this._cachedWeatherData) {
-      weather = this._cachedWeatherData
-    } else {
-      try {
-        if (!this._weatherRequestPromise) {
-          this._weatherRequestPromise = APIClient.getWeather()
-            .finally(() => {
-              this._weatherRequestPromise = null
-            })
-        }
-        const { data } = await this._weatherRequestPromise
-        weather = this._cachedWeatherData = data
-      } catch (error) {
-        console.error(error)
-      }
-    }
-    if (!weather) {
-      weather = WeatherFactory.createMockWeather()
-    }
-    
-    return Promise.resolve(weather)
+  public getWeather(): IWeatherResponseDTO | null {
+    return this._cachedWeatherData
   }
 
+  /**
+   * Start the weather polling.
+   */
   private _startWeatherPolling(): void {
-    this.getWeather()
+    this._fetchWeatherData()
 
     setInterval(() => {
-      // Clear the cached weather data.
-      this._cachedWeatherData = null
-      console.log('Weather data cache cleared.')
+      this._fetchWeatherData()
     }, WEATHER_POLLING_INTERVAL)
+  }
+
+  /**
+   * Fetch the weather data from the API.
+   */
+  private async _fetchWeatherData(): Promise<void> {
+    try {
+      const response = await APIClient.getWeather()
+      this._cachedWeatherData = response.data
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 

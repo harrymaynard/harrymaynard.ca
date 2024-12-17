@@ -1,6 +1,7 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { MoonEntity } from '@/canvas/entities/MoonEntity'
 import { SunEntity } from '@/canvas/entities/SunEntity'
+import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { useWeatherService, WeatherService } from '@/weather/services/WeatherService'
 
 const PLANET_SIZE: number = 100
@@ -17,6 +18,7 @@ export class CircadianCycleEntity extends AbstractEntity {
   private _circadianCycleType: CircadianCycleType = CircadianCycleType.Day
   private _planetEntity: AbstractEntity | null = null
   private _weatherService: WeatherService = useWeatherService()
+  private _cachedWeatherData: IWeatherResponseDTO | null = null
 
   constructor(params) {
     super(params)
@@ -24,50 +26,80 @@ export class CircadianCycleEntity extends AbstractEntity {
     this._updatePlanetEntity()
   }
 
-  private async _updatePlanetEntity(): Promise<void> {
-    if (this._planetEntity) {
-      this.removeChild(this._planetEntity)
+  private _updatePlanetEntity(): void {
+    const weather = this._weatherService.getWeather()
+    if (weather) {
+      this._cachedWeatherData = weather
     }
-    const weather = await this._weatherService.getWeather()
-    const sunriseTime = weather.geo.sunrise * 1000
-    const sunsetTime = weather.geo.sunset * 1000
-    const currentTime = Date.now()
 
-    this._circadianCycleType
+    const sunriseTime: number = (this._cachedWeatherData?.geo.sunrise || 0) * 1000
+    const sunsetTime: number = (this._cachedWeatherData?.geo.sunset || 0) * 1000
+    const currentTime: number = Date.now()
+
+    if (!sunriseTime || !sunsetTime) return
+
+    const circadianCycleType: CircadianCycleType
       = currentTime >= sunriseTime && currentTime <= sunsetTime
         ? CircadianCycleType.Day
         : CircadianCycleType.Night
 
-    if (this._circadianCycleType === CircadianCycleType.Day) {
-      const dayDuration = sunsetTime - sunriseTime
-
-      this._planetEntity = new SunEntity({
-        context: this.context,
-        position: {
-          x: (this.viewport.width / 2) - (PLANET_SIZE / 2),
-          y: Math.sin(
-            (Math.PI * (Date.now() - sunriseTime)) / dayDuration
-          ) * this.position.height,
-          width: PLANET_SIZE,
-          height: PLANET_SIZE,
-        },
-      })
-    } else {
-      const nightDuration = Math.abs(sunriseTime - sunsetTime)
+    if (
+      circadianCycleType !== this._circadianCycleType ||
+      !this._planetEntity
+    ) {
+      this._circadianCycleType = circadianCycleType
       
-      this._planetEntity = new MoonEntity({
-        context: this.context,
-        position: {
-          x: (this.viewport.width / 2) - (PLANET_SIZE / 2),
-          y: Math.sin(
-            (Math.PI * (Date.now() - sunsetTime)) / nightDuration
-          ) * this.position.height,
-          width: PLANET_SIZE,
-          height: PLANET_SIZE,
-        },
-      })
+      if (this._planetEntity) {
+        this.removeChild(this._planetEntity)
+      }
+
+      // Day time.
+      if (this._circadianCycleType === CircadianCycleType.Day) {
+        const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
+        const y: number = this._getPlanetYPosition(
+          this._circadianCycleType,
+          sunriseTime,
+          sunsetTime
+        )
+  
+        this._planetEntity = new SunEntity({
+          context: this.context,
+          position: {
+            x,
+            y,
+            width: PLANET_SIZE,
+            height: PLANET_SIZE,
+          },
+        })
+      }
+      // Night time.
+      else {
+        const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
+        const y: number = this._getPlanetYPosition(
+          this._circadianCycleType,
+          sunriseTime,
+          sunsetTime
+        )
+        
+        this._planetEntity = new MoonEntity({
+          context: this.context,
+          position: {
+            x,
+            y,
+            width: PLANET_SIZE,
+            height: PLANET_SIZE,
+          },
+        })
+      }
+      this.addChild(this._planetEntity)
+    } else if (this._planetEntity) {
+      const y: number = this._getPlanetYPosition(
+        this._circadianCycleType,
+        sunriseTime,
+        sunsetTime
+      )
+      this._planetEntity.setY(y)
     }
-    this.addChild(this._planetEntity)
   }
 
   public update(): void {
@@ -77,7 +109,7 @@ export class CircadianCycleEntity extends AbstractEntity {
   }
   
   /**
-   * Empty draw method for the sky entity.
+   * Draw the sky background.
    */
   public draw(): void {
     if (this._circadianCycleType === CircadianCycleType.Night) {
@@ -89,6 +121,31 @@ export class CircadianCycleEntity extends AbstractEntity {
         this.position.width,
         this.position.height
       )
+    }
+  }
+
+  private _getPlanetYPosition(
+    circadianCycleType: CircadianCycleType,
+    sunriseTime: number,
+    sunsetTime: number
+  ): number {
+    let planetDisplayDuration: number = 1
+
+    switch (circadianCycleType) {
+      case CircadianCycleType.Day:
+        planetDisplayDuration = sunsetTime - sunriseTime
+        return (1 - Math.sin(
+          (Math.PI * (Date.now() - sunriseTime)) / planetDisplayDuration 
+        )) * this.position.height
+
+      case CircadianCycleType.Night:
+        planetDisplayDuration = Math.abs(sunriseTime - sunsetTime)
+        return (1 - Math.sin(
+          (Math.PI * (Date.now() - sunsetTime)) / planetDisplayDuration
+        )) * this.position.height
+
+      default:
+        return 0
     }
   }
 }

@@ -129,7 +129,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    * @param x The new x-position.
    * @returns void
    */
-  protected setX(x: number): void {
+  public setX(x: number): void {
     this.position.x = x
   }
 
@@ -138,7 +138,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    * @param y The new y-position.
    * @returns void
    */
-  protected setY(y: number): void {
+  public setY(y: number): void {
     this.position.y = y
   }
 
@@ -165,7 +165,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    * @param xVelocity The new x-velocity.
    * @returns void
    */
-  protected setXVelocity(xVelocity: number): void {
+  public setXVelocity(xVelocity: number): void {
     this.xVelocity = xVelocity
   }
 
@@ -174,7 +174,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    * @param yVelocity The new y-velocity.
    * @returns void
    */
-  protected setYVelocity(yVelocity: number): void {
+  public setYVelocity(yVelocity: number): void {
     this.yVelocity = yVelocity
   }
 
