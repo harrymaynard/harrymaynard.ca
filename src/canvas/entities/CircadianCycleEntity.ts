@@ -27,6 +27,10 @@ export class CircadianCycleEntity extends AbstractEntity {
     this._updatePlanetEntity()
   }
 
+  /**
+   * Change the planet entity based on the time of day, in accordance with the sunrise and sunset times.
+   * @returns void
+   */
   private _updatePlanetEntity(): void {
     const weather = this._weatherService.getWeather()
     if (weather) {
@@ -103,6 +107,9 @@ export class CircadianCycleEntity extends AbstractEntity {
     }
   }
 
+  /**
+   * Update the circadian cycle entity.
+   */
   public update(): void {
     super.update()
     
@@ -125,6 +132,13 @@ export class CircadianCycleEntity extends AbstractEntity {
     }
   }
 
+  /**
+   * Get the Y position of the planet entity.
+   * @param circadianCycleType 
+   * @param sunriseTime 
+   * @param sunsetTime 
+   * @returns number
+   */
   private _getPlanetYPosition(
     circadianCycleType: CircadianCycleType,
     sunriseTime: number,
