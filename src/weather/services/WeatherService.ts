@@ -1,62 +1,61 @@
 import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
-import { WeatherFactory } from '../factories/WeatherFactory'
+import { APIClient } from '@/services/APIClient'
+
+const WEATHER_POLLING_INTERVAL: number = 15 * 60 * 1000 // 15 minutes.
 
 /**
  * Controller for the weather.
  */
 export class WeatherService {
-  private _localStorageWeather: IWeatherResponseDTO | null = null
-
+  private _cachedWeatherData: IWeatherResponseDTO | null = null
+  
   constructor() {
-    this._localStorageWeather = this._getLocalStorageWeather()
+    this.getWeather = this.getWeather.bind(this)
+
+    this._startWeatherPolling()
   }
 
   /**
    * Get the weather data.
-   * @returns IWeatherResponseDTO | null
+   * @returns IWeatherResponseDTO
    */
-  public async getWeather(): Promise<IWeatherResponseDTO | null> {
-    let weather: IWeatherResponseDTO | null = null
-
-    if (this._localStorageWeather) {
-      weather = this._localStorageWeather
-    } else {
-      weather = WeatherFactory.createMockWeather()
-    }
-    // TODO: Fetch the weather data from the API.
-    
-    return Promise.resolve(weather)
+  public getWeather(): IWeatherResponseDTO | null {
+    return this._cachedWeatherData
   }
 
   /**
-   * Load the weather data from local storage.
-   * @returns IWeatherResponseDTO | null
+   * Start the weather polling.
    */
-  private _getLocalStorageWeather(): IWeatherResponseDTO | null {
-    const weatherJSON = localStorage.getItem('weather')
-    let weather: IWeatherResponseDTO | null = null
+  private _startWeatherPolling(): void {
+    this._fetchWeatherData()
 
-    if (weatherJSON) {
-      try {
-        weather = JSON.parse(weatherJSON)
-        console.log('Weather data loaded from local storage:', weather)
-      } catch (error) {
-        console.error('Error parsing weather data from local storage:', error)
-      }
+    setInterval(() => {
+      this._fetchWeatherData()
+    }, WEATHER_POLLING_INTERVAL)
+  }
+
+  /**
+   * Fetch the weather data from the API.
+   */
+  private async _fetchWeatherData(): Promise<void> {
+    try {
+      const response = await APIClient.getWeather()
+      this._cachedWeatherData = response.data
+    } catch (error) {
+      console.error(error)
     }
-    return weather
   }
 }
 
-let weatherService: WeatherService
+let service: WeatherService
 
 /**
  * Get the weather controller.
  * @returns WeatherController
  */
-export const useWeatherService = () => {
-  if (!weatherService) {
-    weatherService = new WeatherService()
+export const useWeatherService = (): WeatherService => {
+  if (!service) {
+    service = new WeatherService()
   }
-  return weatherService
+  return service
 }

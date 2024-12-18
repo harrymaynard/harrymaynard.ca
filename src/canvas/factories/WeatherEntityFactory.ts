@@ -29,7 +29,7 @@ export class WeatherEntityFactory {
             x: this._parentEntity.position.x,
             y: this._parentEntity.position.y,
             width: this._parentEntity.position.width,
-            height: (this._parentEntity.position.height / 2) + 30,
+            height: this._parentEntity.position.height,
           },
           viewport: {
             x: this._parentEntity.position.x,
