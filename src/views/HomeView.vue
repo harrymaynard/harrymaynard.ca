@@ -89,7 +89,6 @@ const animateTitle = (): void => {
     cursor: default;
     margin-right: -12px;
     color: #000;
-    text-shadow : 1px 1px 1px #FFF;
 
     .cursor {
       text-decoration: underline;
