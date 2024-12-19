@@ -31,6 +31,10 @@ export class MoonEntity extends AbstractEntity {
     
     const image = MoonEntity.assets.get(MoonAssetType.Moon)
     if (image) {
+      const opacity: number = this.transition?.getValue() || 1
+      
+      this.context.save()
+      this.context.globalAlpha = opacity
       this.context.drawImage(
         image,
         this.position.x,
@@ -38,6 +42,7 @@ export class MoonEntity extends AbstractEntity {
         this.position.width,
         this.position.height
       )
+      this.context.restore()
     }
   }
 }
