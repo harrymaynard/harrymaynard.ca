@@ -2,6 +2,7 @@ import { IEntity } from '@/canvas/interfaces/IEntity'
 import { EntityEventType } from '@/canvas/enums/EntityEventType'
 import { createDefaultViewport } from '@/canvas/helpers/ViewportHelper'
 import { type IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
+import { Transition } from '@/canvas/transitions/Transition'
 
 /**
  * Base class for all entities in the canvas.
@@ -17,6 +18,8 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   public rotationVelocity: number
   public entities: Array<AbstractEntity> = []
   private _isVisible: boolean = false
+
+  protected transition: Transition | undefined = undefined
 
   protected static isAssetsLoaded: boolean = false
   protected static assets: Map<string, any>
@@ -176,6 +179,14 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    */
   public setYVelocity(yVelocity: number): void {
     this.yVelocity = yVelocity
+  }
+
+  /**
+   * Set the transition for the entity.
+   * @param transition 
+   */
+  public setTransition(transition: Transition): void {
+    this.transition = transition
   }
 
   /**

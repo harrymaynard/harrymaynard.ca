@@ -1,21 +1,20 @@
+import { AdvancedEventTarget } from '@/canvas/transitions/AdvancedEventTarget'
+import { TransitionEventType } from '@/canvas/enums/TransitionEventType'
+
 interface IAbstractTransitionParams {
   startValue: number
   endValue: number
   duration: number
-  onComplete?: () => void
-  onTick?: (value: number) => void
 }
 
 /**
  * Transition class.
  */
-export class Transition {
+export class Transition extends AdvancedEventTarget {
   private _startValue: number = 0
   private _endValue: number = 0
   private _duration: number = 0
-  private _onComplete: () => void = () => {}
-  private _onTick: (value: number) => void = () => {}
-
+  
   private _startTime: number = 0
   private _value: number = 0
   private _isRunning: boolean = false
@@ -24,16 +23,14 @@ export class Transition {
     startValue,
     endValue,
     duration,
-    onComplete,
-    onTick,
   }: IAbstractTransitionParams) {
+    super()
+
     this._tick = this._tick.bind(this)
     
     this._startValue = startValue
     this._endValue = endValue
     this._duration = duration
-    this._onComplete = onComplete || this._onComplete
-    this._onTick = onTick || this._onTick
     this._value = startValue
 
     this._start()
@@ -51,8 +48,9 @@ export class Transition {
   /**
    * Stop the transition.
    */
-  public stop(): void {
+  public destroy(): void {
     this._isRunning = false
+    this.removeAllEventListeners()
   }
 
   /**
@@ -66,11 +64,11 @@ export class Transition {
     this._value = (delta * (this._endValue - this._startValue)) + this._startValue
     
     if (delta < 1) {
-      this._onTick(this._value)
+      this.dispatchEvent(new Event(TransitionEventType.Tick))
       requestAnimationFrame(this._tick)
     } else {
-      this._onTick(this._endValue)
-      this._onComplete()
+      this.dispatchEvent(new Event(TransitionEventType.Tick))
+      this.dispatchEvent(new Event(TransitionEventType.Complete))
     }
   }
 
