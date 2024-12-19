@@ -67,28 +67,24 @@ export class CircadianCycleEntity extends AbstractEntity {
         if (!this._planetEntity) {
           this._renderSun(circadianCycleType, sunriseTime, sunsetTime)
         } else {
-          this._fadeTransition?.stop()
+          this._fadeTransition?.destroy()
           this._fadeTransition = new Transition({
             startValue: 0.5,
             endValue: 0,
             duration: NIGHT_SKY_TRANSITION_DURATION,
-            onComplete: () => {
-              this._renderSun(circadianCycleType, sunriseTime, sunsetTime)
-            }
           })
+          this._renderSun(circadianCycleType, sunriseTime, sunsetTime)
         }
       }
       // Night time.
       else {
-        this._fadeTransition?.stop()
+        this._fadeTransition?.destroy()
         this._fadeTransition = new Transition({
           startValue: 0,
           endValue: 0.5,
           duration: NIGHT_SKY_TRANSITION_DURATION,
-          onComplete: () => {
-            this._renderMoon(circadianCycleType, sunriseTime, sunsetTime)
-          }
         })
+        this._renderMoon(circadianCycleType, sunriseTime, sunsetTime)
       }
       this._circadianCycleType = circadianCycleType
     } else if (this._planetEntity) {
@@ -183,6 +179,12 @@ export class CircadianCycleEntity extends AbstractEntity {
         height: PLANET_SIZE,
       },
     })
+    this._planetEntity.setTransition(new Transition({
+      startValue: 0,
+      endValue: 1,
+      duration: NIGHT_SKY_TRANSITION_DURATION,
+    }))
+    
     this.addChild(this._planetEntity)
   }
 
@@ -207,6 +209,11 @@ export class CircadianCycleEntity extends AbstractEntity {
         height: PLANET_SIZE,
       },
     })
+    this._planetEntity.setTransition(new Transition({
+      startValue: 0,
+      endValue: 1,
+      duration: NIGHT_SKY_TRANSITION_DURATION,
+    }))
     this.addChild(this._planetEntity)
   }
 }

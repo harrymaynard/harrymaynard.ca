@@ -11,8 +11,9 @@ export class SunEntity extends AbstractEntity {
    */
   public draw(): void {
     const radius: number = this.position.width / 2
+    const opacity: number = this.transition?.getValue() || 1
 
-    this.context.fillStyle = '#FFCC33'
+    this.context.fillStyle = `rgba(255, 204, 51, ${opacity})`
     this.context.beginPath()
     this.context.arc(
       this.position.x + radius,
