@@ -4,14 +4,14 @@ import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
 import AnimatedBackground from '@/components/AnimatedBackground.vue'
 
-const TITLE: string = 'Harry Maynard'
-const TITLE_ANIMATION_INTERVAL: number = 100
+const TITLE_ANIMATION_DURATION: number = 1000
 
-const animatedTitle = ref<string>('')
+const isPageMounted = ref<boolean>(false)
 const isTitleAnimationComplete = ref<boolean>(false)
 
 onMounted(() => {
   animateTitle()
+  isPageMounted.value = true
 })
 
 const handleMouseEnterLink = (event: MouseEvent): void => {
@@ -32,13 +32,9 @@ const handleClickLink = (event: MouseEvent): void => {
 }
 
 const animateTitle = (): void => {
-  if (animatedTitle.value.length < TITLE.length) {
-    animatedTitle.value += TITLE.charAt(animatedTitle.value.length)
-    setTimeout(animateTitle, TITLE_ANIMATION_INTERVAL)
-  }
-  if (animatedTitle.value.length === TITLE.length) {
+  setTimeout(() => {
     isTitleAnimationComplete.value = true
-  }
+  }, TITLE_ANIMATION_DURATION)
 }
 </script>
 
@@ -46,9 +42,8 @@ const animateTitle = (): void => {
   <div class="home-view">
     <AnimatedBackground />
     <div>
-      <h1 :class="`title ${isTitleAnimationComplete ? 'title-animation-complete' : ''}`">
-        <span>{{ animatedTitle }}</span>
-        <span class="cursor">&nbsp;</span>
+      <h1 :class="`title ${isPageMounted ? 'show' : ''}`">
+        <span>Harry Maynard</span>
       </h1>
       <div :class="`links ${isTitleAnimationComplete ? 'title-animation-complete' : ''}`">
         <a
@@ -59,7 +54,7 @@ const animateTitle = (): void => {
           @mouseleave="handleMouseLeaveLink"
           @click="handleClickLink"
         >
-          <IconLinkedIn class="icon linkedin"/>
+          <IconLinkedIn class="icon linkedin" />
         </a>
         <a
           href="https://github.com/harrymaynard"
@@ -69,7 +64,7 @@ const animateTitle = (): void => {
           @mouseleave="handleMouseLeaveLink"
           @click="handleClickLink"
         >
-          <IconGitHub class="icon github"/>
+          <IconGitHub class="icon github" />
         </a>
       </div>
     </div>
@@ -77,6 +72,8 @@ const animateTitle = (): void => {
 </template>
 
 <style lang="scss" scoped>
+$icon-size: 40px;
+
 .home-view {
   height: 100vh;
   display: flex;
@@ -89,20 +86,18 @@ const animateTitle = (): void => {
     cursor: default;
     margin-right: -12px;
     color: #000;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 1s ease;
 
-    .cursor {
-      text-decoration: underline;
-      visibility: visible;
-    }
-    &.title-animation-complete {
-      .cursor {
-        animation: infinite blink;
-        animation-duration: 1s;
-      }
+    &.show {
+      transform: translateY(0);
+      opacity: 1;
     }
   }
   .links {
     margin-top: 30px;
+    height: $icon-size;
 
     a {
       margin: 0 10px;
@@ -135,8 +130,8 @@ const animateTitle = (): void => {
     }
     &.title-animation-complete .icon {
       opacity: 1;
-      width: 40px;
-      height: 40px;
+      width: $icon-size;
+      height: $icon-size;
     }
   }
 }
