@@ -3,9 +3,11 @@ import { MoonEntity } from '@/canvas/entities/MoonEntity'
 import { SunEntity } from '@/canvas/entities/SunEntity'
 import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { useWeatherService, WeatherService } from '@/weather/services/WeatherService'
+import { Transition } from '@/canvas/transitions/Transition'
 
 const PLANET_SIZE: number = 100
 const SINGLE_DAY_DURATION: number = 24 * 60 * 60 * 1000
+const NIGHT_SKY_TRANSITION_DURATION: number = 2000
 
 enum CircadianCycleType {
   Day = 'day',
@@ -20,9 +22,13 @@ export class CircadianCycleEntity extends AbstractEntity {
   private _planetEntity: AbstractEntity | null = null
   private _weatherService: WeatherService = useWeatherService()
   private _cachedWeatherData: IWeatherResponseDTO | null = null
+  private _fadeTransition: Transition | null = null
 
   constructor(params) {
     super(params)
+
+    this._renderSun = this._renderSun.bind(this)
+    this._renderMoon = this._renderMoon.bind(this)
 
     this._updatePlanetEntity()
   }
@@ -50,56 +56,40 @@ export class CircadianCycleEntity extends AbstractEntity {
 
     if (
       circadianCycleType !== this._circadianCycleType ||
-      !this._planetEntity
+      (!this._planetEntity && !this._fadeTransition)
     ) {
-      this._circadianCycleType = circadianCycleType
-      
       if (this._planetEntity) {
         this.removeChild(this._planetEntity)
       }
 
       // Day time.
-      if (this._circadianCycleType === CircadianCycleType.Day) {
-        const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
-        const y: number = this._getPlanetYPosition(
-          this._circadianCycleType,
-          sunriseTime,
-          sunsetTime
-        )
-  
-        this._planetEntity = new SunEntity({
-          context: this.context,
-          position: {
-            x,
-            y,
-            width: PLANET_SIZE,
-            height: PLANET_SIZE,
-          },
-        })
+      if (circadianCycleType === CircadianCycleType.Day) {
+        if (!this._planetEntity) {
+          this._renderSun(circadianCycleType, sunriseTime, sunsetTime)
+        } else {
+          this._fadeTransition?.destroy()
+          this._fadeTransition = new Transition({
+            startValue: 0.5,
+            endValue: 0,
+            duration: NIGHT_SKY_TRANSITION_DURATION,
+          })
+          this._renderSun(circadianCycleType, sunriseTime, sunsetTime)
+        }
       }
       // Night time.
       else {
-        const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
-        const y: number = this._getPlanetYPosition(
-          this._circadianCycleType,
-          sunriseTime,
-          sunsetTime
-        )
-        
-        this._planetEntity = new MoonEntity({
-          context: this.context,
-          position: {
-            x,
-            y,
-            width: PLANET_SIZE,
-            height: PLANET_SIZE,
-          },
+        this._fadeTransition?.destroy()
+        this._fadeTransition = new Transition({
+          startValue: 0,
+          endValue: 0.5,
+          duration: NIGHT_SKY_TRANSITION_DURATION,
         })
+        this._renderMoon(circadianCycleType, sunriseTime, sunsetTime)
       }
-      this.addChild(this._planetEntity)
+      this._circadianCycleType = circadianCycleType
     } else if (this._planetEntity) {
       const y: number = this._getPlanetYPosition(
-        this._circadianCycleType,
+        circadianCycleType,
         sunriseTime,
         sunsetTime
       )
@@ -122,7 +112,7 @@ export class CircadianCycleEntity extends AbstractEntity {
   public draw(): void {
     if (this._circadianCycleType === CircadianCycleType.Night) {
       // Draw the night sky.
-      this.context.fillStyle = 'rgba(0, 0, 0, 0.5)'
+      this.context.fillStyle = `rgba(0, 0, 0, ${this._fadeTransition?.getValue() || 0})`
       this.context.fillRect(
         this.position.x,
         this.position.y,
@@ -145,6 +135,10 @@ export class CircadianCycleEntity extends AbstractEntity {
     sunsetTime: number
   ): number {
     let planetDisplayDuration: number = 1
+    
+    if (Date.now() < sunriseTime) {
+      sunsetTime -= SINGLE_DAY_DURATION
+    }
 
     switch (circadianCycleType) {
       case CircadianCycleType.Day:
@@ -162,5 +156,64 @@ export class CircadianCycleEntity extends AbstractEntity {
       default:
         return 0
     }
+  }
+
+  private _renderSun(
+    circadianCycleType: CircadianCycleType,
+    sunriseTime: number,
+    sunsetTime: number
+  ): void {
+    const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
+    const y: number = this._getPlanetYPosition(
+      circadianCycleType,
+      sunriseTime,
+      sunsetTime
+    )
+
+    this._planetEntity = new SunEntity({
+      context: this.context,
+      position: {
+        x,
+        y,
+        width: PLANET_SIZE,
+        height: PLANET_SIZE,
+      },
+    })
+    this._planetEntity.setTransition(new Transition({
+      startValue: 0,
+      endValue: 1,
+      duration: NIGHT_SKY_TRANSITION_DURATION,
+    }))
+    
+    this.addChild(this._planetEntity)
+  }
+
+  private _renderMoon(
+    circadianCycleType: CircadianCycleType,
+    sunriseTime: number,
+    sunsetTime: number
+  ): void {
+    const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
+    const y: number = this._getPlanetYPosition(
+      circadianCycleType,
+      sunriseTime,
+      sunsetTime
+    )
+    
+    this._planetEntity = new MoonEntity({
+      context: this.context,
+      position: {
+        x,
+        y,
+        width: PLANET_SIZE,
+        height: PLANET_SIZE,
+      },
+    })
+    this._planetEntity.setTransition(new Transition({
+      startValue: 0,
+      endValue: 1,
+      duration: NIGHT_SKY_TRANSITION_DURATION,
+    }))
+    this.addChild(this._planetEntity)
   }
 }
