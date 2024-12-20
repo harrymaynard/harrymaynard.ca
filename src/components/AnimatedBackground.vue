@@ -80,7 +80,7 @@ const handleNextFrame = () => {
     <canvas
       id="background-canvas"
       ref="backgroundCanvasEl"
-    ></canvas>
+    />
   </div>
 </template>
 
