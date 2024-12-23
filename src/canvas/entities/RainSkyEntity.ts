@@ -12,7 +12,7 @@ const MIN_PARTICLE_SIZE: number = 30
 const MAX_PARTICLE_SIZE: number = 50
 
 /**
- * SkyEntity class which handles the sky background entities.
+ * RainSkyEntity class which handles the rain particle entities.
  */
 export class RainSkyEntity extends AbstractEntity {
   private _particleFactory: ParticleFactory

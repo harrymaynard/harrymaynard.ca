@@ -1,7 +1,7 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 
 /**
- * Cloud particle entity.
+ * Rain particle entity.
  */
 export class RainParticleEntity extends AbstractEntity {
   /**
