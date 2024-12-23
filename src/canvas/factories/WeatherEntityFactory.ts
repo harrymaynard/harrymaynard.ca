@@ -2,6 +2,7 @@ import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { SnowSkyEntity } from '@/canvas/entities/SnowSkyEntity'
 import { CloudSkyEntity } from '@/canvas/entities/CloudSkyEntity'
+import { RainSkyEntity } from '@/canvas/entities/RainSkyEntity'
 
 export class WeatherEntityFactory {
   private _parentEntity: AbstractEntity
@@ -25,6 +26,23 @@ export class WeatherEntityFactory {
     switch (weatherCodeType) {
       case WeatherCodeType.Clouds:
         return new CloudSkyEntity({
+          context: this._parentEntity.context,
+          position: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: this._parentEntity.position.height,
+          },
+          viewport: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: this._parentEntity.position.height,
+          },
+        })
+
+      case WeatherCodeType.Rain:
+        return new RainSkyEntity({
           context: this._parentEntity.context,
           position: {
             x: this._parentEntity.position.x,
