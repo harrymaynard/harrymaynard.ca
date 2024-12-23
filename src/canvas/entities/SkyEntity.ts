@@ -33,7 +33,7 @@ export class SkyEntity extends AbstractEntity {
       const weatherEntityFactory = new WeatherEntityFactory({
         parentEntity: this,
       })
-      const skyEntity = weatherEntityFactory.create(WeatherCodeType.Clouds)
+      const skyEntity = weatherEntityFactory.create(WeatherCodeType.Snow)
       if (skyEntity) {
         this.addChild(skyEntity)
       }
