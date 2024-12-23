@@ -1,15 +1,22 @@
+import isEqual from 'lodash/isEqual'
 import { IWeatherResponseDTO } from '../interfaces/IWeatherResponseDTO'
 import { APIClient } from '@/services/APIClient'
 
 const WEATHER_POLLING_INTERVAL: number = 15 * 60 * 1000 // 15 minutes.
 
+export enum WeatherServiceEventType {
+  Updated = 'updated',
+}
+
 /**
  * Controller for the weather.
  */
-export class WeatherService {
+export class WeatherService extends EventTarget {
   private _cachedWeatherData: IWeatherResponseDTO | null = null
   
   constructor() {
+    super()
+
     this.getWeather = this.getWeather.bind(this)
 
     this._startWeatherPolling()
@@ -40,7 +47,11 @@ export class WeatherService {
   private async _fetchWeatherData(): Promise<void> {
     try {
       const response = await APIClient.getWeather()
+      if (isEqual(response.data, this._cachedWeatherData)) {
+        return
+      }
       this._cachedWeatherData = response.data
+      this.dispatchEvent(new Event(WeatherServiceEventType.Updated))
     } catch (error) {
       console.error(error)
     }
