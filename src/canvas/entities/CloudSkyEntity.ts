@@ -6,8 +6,8 @@ import { ParticleFactoryEnterType } from '@/canvas/enums/ParticleFactoryEnterTyp
 import { BoxSideType } from '@/canvas/enums/BoxSideType'
 
 const SKY_PARTICLE_COUNT: number = 30
-const MIN_PARTICLE_VELOCITY: number = 0.5
-const MAX_PARTICLE_VELOCITY: number = 1
+const MIN_PARTICLE_VELOCITY: number = 0.2
+const MAX_PARTICLE_VELOCITY: number = 0.7
 const MIN_PARTICLE_SIZE: number = 100
 const MAX_PARTICLE_SIZE: number = 200
 

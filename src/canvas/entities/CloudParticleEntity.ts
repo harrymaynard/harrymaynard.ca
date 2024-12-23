@@ -6,6 +6,13 @@ import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
 
 enum CloudAssetType {
   Cloud01 = '/images/weather/cloud-01.svg',
+  Cloud02 = '/images/weather/cloud-02.svg',
+  Cloud03 = '/images/weather/cloud-03.svg',
+  Cloud04 = '/images/weather/cloud-04.svg',
+  Cloud05 = '/images/weather/cloud-05.svg',
+  Cloud06 = '/images/weather/cloud-06.svg',
+  Cloud07 = '/images/weather/cloud-07.svg',
+  Cloud08 = '/images/weather/cloud-08.svg',
 }
 
 /**
@@ -19,6 +26,34 @@ export class CloudParticleEntity extends AbstractEntity {
       {
         type: AssetType.Image,
         url: CloudAssetType.Cloud01,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud02,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud03,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud04,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud05,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud06,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud07,
+      },
+      {
+        type: AssetType.Image,
+        url: CloudAssetType.Cloud08,
       }
     ]).then((assets) => {
       CloudParticleEntity.assets = assets
@@ -31,6 +66,13 @@ export class CloudParticleEntity extends AbstractEntity {
 
     this._assetKey = getRandomAssetKey<CloudAssetType>([
       CloudAssetType.Cloud01,
+      CloudAssetType.Cloud02,
+      CloudAssetType.Cloud03,
+      CloudAssetType.Cloud04,
+      CloudAssetType.Cloud05,
+      CloudAssetType.Cloud06,
+      CloudAssetType.Cloud07,
+      CloudAssetType.Cloud08,
     ])
   }
 
