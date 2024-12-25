@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 import { onMounted, onBeforeUnmount, ref, type Ref } from 'vue'
 import { RootEntity } from '@/canvas/entities/RootEntity'
+import { FrameLimiter } from '@/canvas/render/FrameLimiter'
 
 const backgroundCanvasEl = ref<HTMLCanvasElement>() as Ref<HTMLCanvasElement>
 
-let isComponentMounted: boolean = false
 let context: CanvasRenderingContext2D
 let rootEntity: RootEntity
+const frameLimiter = new FrameLimiter(60) // 60 FPS.
 
 onMounted(() => {
   context = backgroundCanvasEl.value.getContext('2d') as CanvasRenderingContext2D
@@ -25,14 +26,12 @@ onMounted(() => {
   setCanvasSize()
   window.addEventListener('resize', setCanvasSize)
 
-  isComponentMounted = true
-
   // Start render loop.
-  window.requestAnimationFrame(handleNextFrame)
+  frameLimiter.start(handleNextFrame.bind(this))
 })
 
 onBeforeUnmount(() => {
-  isComponentMounted = false
+  frameLimiter.stop()
   window.removeEventListener('resize', setCanvasSize)
 })
 
@@ -63,15 +62,9 @@ const setCanvasSize = () => {
  * Render loop that updates entities and renders frame.
  */
 const handleNextFrame = () => {
-  // Exit render loop if component is unmounted.
-  if (!isComponentMounted) return
-
   // Update entities and render frame.
   rootEntity.update()
   rootEntity.render()
-  
-  // Request next animation frame.
-  window.requestAnimationFrame(handleNextFrame)
 }
 </script>
 
