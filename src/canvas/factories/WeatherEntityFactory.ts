@@ -3,6 +3,7 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { SnowSkyEntity } from '@/canvas/entities/SnowSkyEntity'
 import { CloudSkyEntity } from '@/canvas/entities/CloudSkyEntity'
 import { RainSkyEntity } from '@/canvas/entities/RainSkyEntity'
+import { ThunderstormSkyEntity } from '@/canvas/entities/ThunderstormSkyEntity'
 
 export class WeatherEntityFactory {
   private _parentEntity: AbstractEntity
@@ -60,6 +61,23 @@ export class WeatherEntityFactory {
 
       case WeatherCodeType.Snow:
         return new SnowSkyEntity({
+          context: this._parentEntity.context,
+          position: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: this._parentEntity.position.height,
+          },
+          viewport: {
+            x: this._parentEntity.position.x,
+            y: this._parentEntity.position.y,
+            width: this._parentEntity.position.width,
+            height: this._parentEntity.position.height,
+          },
+        })
+
+      case WeatherCodeType.Thunderstorm:
+        return new ThunderstormSkyEntity({
           context: this._parentEntity.context,
           position: {
             x: this._parentEntity.position.x,
