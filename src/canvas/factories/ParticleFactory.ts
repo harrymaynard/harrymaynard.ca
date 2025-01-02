@@ -83,7 +83,7 @@ export class ParticleFactory {
       if (this._createOptions?.exitListener) {
         particle.addEventListener(EntityEventType.ExitFrame, this._createOptions.exitListener)
       }
-      this._parentEntity.addChild(particle)
+      this._parentEntity.addChild(this._createOptions.entityClass.name, particle)
     }
   }
 

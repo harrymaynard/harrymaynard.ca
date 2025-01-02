@@ -1,4 +1,4 @@
-import { AdvancedEventTarget } from '@/canvas/transitions/AdvancedEventTarget'
+import { AdvancedEventTarget } from '@/canvas/events/AdvancedEventTarget'
 import { TransitionEventType } from '@/canvas/enums/TransitionEventType'
 
 interface IAbstractTransitionParams {

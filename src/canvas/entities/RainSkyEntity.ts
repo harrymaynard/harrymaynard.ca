@@ -15,6 +15,7 @@ const MAX_PARTICLE_SIZE: number = 50
  * RainSkyEntity class which handles the rain particle entities.
  */
 export class RainSkyEntity extends AbstractEntity {
+  public readonly name: string = 'rain-sky'
   private _particleFactory: ParticleFactory
 
   constructor(params) {
@@ -70,9 +71,9 @@ export class RainSkyEntity extends AbstractEntity {
    * @param event 
    */
   private _handleParticleExit(event: Event): void {
-    const entity: AbstractEntity = event.target as AbstractEntity
+    const entity: AbstractEntity = event.target as unknown as AbstractEntity
     entity.removeEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
-    this.removeChild(entity)
+    this.removeChild(entity.name, entity)
     this._particleFactory.create()
   }
 }

@@ -7,6 +7,8 @@ const BACKGROUND_COLOR: string = '#FFF'
  * @extends AbstractEntity
  */
 export class BackgroundEntity extends AbstractEntity {
+  public readonly name: string = 'background'
+
   /**
    * Render the entity on the canvas.
    * @returns void

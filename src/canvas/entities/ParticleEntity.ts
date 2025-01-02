@@ -3,6 +3,8 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 const PARTICLE_COLOR: string = '#CCC'
 
 export class ParticleEntity extends AbstractEntity {
+  public readonly name: string = 'particle'
+  
   public draw(): void {
     const radius: number = this.position.width / 2
 

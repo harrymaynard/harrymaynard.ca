@@ -3,11 +3,13 @@ import { EntityEventType } from '@/canvas/enums/EntityEventType'
 import { createDefaultViewport } from '@/canvas/helpers/ViewportHelper'
 import { type IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
 import { Transition } from '@/canvas/transitions/Transition'
+import { AdvancedEventTarget } from '@/canvas/events/AdvancedEventTarget'
 
 /**
  * Base class for all entities in the canvas.
  */
-export abstract class AbstractEntity extends EventTarget implements IEntity {
+export abstract class AbstractEntity extends AdvancedEventTarget implements IEntity {
+  public abstract name: string
   public context: CanvasRenderingContext2D
   public frameWidth: number = 0
   public frameHeight: number = 0
@@ -16,7 +18,7 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   public xVelocity: number
   public yVelocity: number
   public rotationVelocity: number
-  public entities: Array<AbstractEntity> = []
+  public entities: Map<string, Array<AbstractEntity>> = new Map()
   private _isVisible: boolean = false
 
   protected transition: Transition | undefined = undefined
@@ -56,6 +58,21 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   }
 
   /**
+   * Destroy the entity.
+   */
+  public destroy(): void {
+    this.removeAllEventListeners()
+
+    this.entities.forEach((collection) => {
+      if (Array.isArray(collection)) {
+        collection.forEach((childEntity) => {
+          childEntity.destroy()
+        })
+      }
+    })
+  }
+
+  /**
    * Render the entity on the canvas.
    * @returns void
    */
@@ -67,8 +84,12 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     this.draw()
     
     // Render child entities.
-    this.entities.forEach((entity) => {
-      entity.render()
+    this.entities.forEach((collection) => {
+      if (Array.isArray(collection)) {
+        collection.forEach((childEntity) => {
+          childEntity.render()
+        })
+      }
     })
   }
 
@@ -100,8 +121,12 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     }
 
     // Update child entities.
-    this.entities.forEach((entity) => {
-      entity.update()
+    this.entities.forEach((collection) => {
+      if (Array.isArray(collection)) {
+        collection.forEach((childEntity) => {
+          childEntity.update()
+        })
+      }
     })
   }
 
@@ -109,21 +134,25 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
    * Add a child entity.
    * @param entity 
    */
-  public addChild(entity: AbstractEntity): void {
+  public addChild(key: string, entity: AbstractEntity): void {
     if (this.frameWidth && this.frameHeight) {
       entity.setFrameSize(this.frameWidth, this.frameHeight)
     }
-    this.entities.push(entity)
+    if (!this.entities.has(key)) {
+      this.entities.set(key, [])
+    }
+    this.entities.get(key)?.push(entity) 
   }
 
   /**
    * Remove a child entity.
    * @param entity 
    */
-  public removeChild(entity: AbstractEntity): void {
-    const index = this.entities.indexOf(entity)
+  public removeChild(key: string, entity: AbstractEntity): void {
+    const entities = this.entities.get(key)
+    const index = entities?.indexOf(entity) || -1
     if (index > -1) {
-      this.entities.splice(index, 1)
+      entities?.splice(index, 1)
     }
   }
 
@@ -197,8 +226,12 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
   public setRenderContext(context: CanvasRenderingContext2D): void {
     this.context = context
     
-    this.entities.forEach((entity) => {
-      entity.setRenderContext(context)
+    this.entities.forEach((collection) => {
+      if (Array.isArray(collection)) {
+        collection.forEach((childEntity) => {
+          childEntity.setRenderContext(context)
+        })
+      }
     })
   }
 
@@ -215,8 +248,12 @@ export abstract class AbstractEntity extends EventTarget implements IEntity {
     this.frameWidth = width
     this.frameHeight = height
 
-    this.entities.forEach((entity) => {
-      entity.setFrameSize(width, height)
+    this.entities.forEach((collection) => {
+      if (Array.isArray(collection)) {
+        collection.forEach((entity) => {
+          entity.setFrameSize(width, height)
+        })
+      }
     })
   }
 

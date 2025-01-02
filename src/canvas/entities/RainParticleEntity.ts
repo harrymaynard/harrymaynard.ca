@@ -4,6 +4,8 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
  * Rain particle entity.
  */
 export class RainParticleEntity extends AbstractEntity {
+  public readonly name: string = 'rain-particle'
+  
   /**
    * Draw the entity on the canvas.
    * @returns void

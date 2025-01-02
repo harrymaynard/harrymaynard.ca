@@ -14,6 +14,7 @@ const LIGHTNING_FADE_OUT_DURATION = 1000
  * Cloud particle entity.
  */
 export class ThunderstormParticleEntity extends AbstractEntity {
+  public readonly name: string = 'thunderstorm-particle'
   private _lightningPoints: Array<ICoordinates> = []
   private _hasLightningReachedGround: boolean = false
 

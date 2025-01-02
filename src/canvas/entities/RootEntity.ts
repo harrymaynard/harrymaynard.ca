@@ -2,12 +2,14 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { BackgroundEntity } from '@/canvas/entities/BackgroundEntity'
 import { SkyEntity } from '@/canvas/entities/SkyEntity'
 import { WaveEntity } from '@/canvas/entities/WaveEntity'
+import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
 
 /**
  * The root entity to be drawn on the canvas.
  * @extends AbstractEntity
  */
 export class RootEntity extends AbstractEntity {
+  public readonly name: string = 'root'
 
   constructor(params) {
     super(params)
@@ -24,7 +26,7 @@ export class RootEntity extends AbstractEntity {
         height: position.height,
       },
     })
-    this.addChild(backgroundEntity)
+    this.addChild(EntityKeyType.Background, backgroundEntity)
 
     // Sky entity.
     const skyEntity = new SkyEntity({
@@ -36,7 +38,7 @@ export class RootEntity extends AbstractEntity {
         height: position.height / 2 + 30,
       },
     })
-    this.addChild(skyEntity)
+    this.addChild(EntityKeyType.Sky, skyEntity)
     
     // Wave entity.
     const waveEntity = new WaveEntity({
@@ -49,7 +51,7 @@ export class RootEntity extends AbstractEntity {
       },
       xVelocity: -1,
     })
-    this.addChild(waveEntity)
+    this.addChild(EntityKeyType.Wave, waveEntity)
 
     this.setFrameSize(
       position.width,

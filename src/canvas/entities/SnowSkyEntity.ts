@@ -17,6 +17,7 @@ const MAX_PARTICLE_SIZE: number = 40
  * SkyEntity class which handles the sky background entities.
  */
 export class SnowSkyEntity extends AbstractEntity {
+  public readonly name: string = 'snow-sky'
   private _particleFactory: ParticleFactory
 
   constructor(params) {
@@ -79,9 +80,9 @@ export class SnowSkyEntity extends AbstractEntity {
    * @param event 
    */
   private _handleParticleExit(event: Event): void {
-    const entity: AbstractEntity = event.target as AbstractEntity
+    const entity: AbstractEntity = event.target as unknown as AbstractEntity
     entity.removeEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
-    this.removeChild(entity)
+    this.removeChild(entity.name, entity)
     this._particleFactory.create()
   }
 }

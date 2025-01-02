@@ -4,6 +4,7 @@ import { SunEntity } from '@/canvas/entities/SunEntity'
 import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { useWeatherService, WeatherService } from '@/weather/services/WeatherService'
 import { Transition } from '@/canvas/transitions/Transition'
+import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
 
 const PLANET_SIZE: number = 100
 const SINGLE_DAY_DURATION: number = 24 * 60 * 60 * 1000
@@ -18,6 +19,7 @@ enum CircadianCycleType {
  * Circadian cycle entity, which renders sun, moon, and sky.
  */
 export class CircadianCycleEntity extends AbstractEntity {
+  public readonly name: string = 'circadian-cycle'
   private _circadianCycleType: CircadianCycleType = CircadianCycleType.Day
   private _planetEntity: AbstractEntity | null = null
   private _weatherService: WeatherService = useWeatherService()
@@ -59,7 +61,7 @@ export class CircadianCycleEntity extends AbstractEntity {
       (!this._planetEntity && !this._fadeTransition)
     ) {
       if (this._planetEntity) {
-        this.removeChild(this._planetEntity)
+        this.removeChild(EntityKeyType.Planet, this._planetEntity)
       }
 
       // Day time.
@@ -185,7 +187,7 @@ export class CircadianCycleEntity extends AbstractEntity {
       duration: NIGHT_SKY_TRANSITION_DURATION,
     }))
     
-    this.addChild(this._planetEntity)
+    this.addChild(EntityKeyType.Planet, this._planetEntity)
   }
 
   private _renderMoon(
@@ -214,6 +216,6 @@ export class CircadianCycleEntity extends AbstractEntity {
       endValue: 1,
       duration: NIGHT_SKY_TRANSITION_DURATION,
     }))
-    this.addChild(this._planetEntity)
+    this.addChild(EntityKeyType.Planet, this._planetEntity)
   }
 }

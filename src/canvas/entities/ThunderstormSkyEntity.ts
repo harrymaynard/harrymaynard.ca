@@ -6,6 +6,7 @@ import { EntityEventType } from '../enums/EntityEventType'
  * ThunderstormSkyEntity class which handles the thunderstorm sky background entities.
  */
 export class ThunderstormSkyEntity extends AbstractEntity {
+  public readonly name: string = 'thunderstorm-sky'
   private _thunderstormParticle: ThunderstormParticleEntity | null = null
 
   constructor(params) {
@@ -19,7 +20,7 @@ export class ThunderstormSkyEntity extends AbstractEntity {
   private _createThunderstormParticle(): void {
     if (this._thunderstormParticle) {
       this._thunderstormParticle.removeEventListener(EntityEventType.ExitFrame, this._createThunderstormParticle)
-      this.removeChild(this._thunderstormParticle)
+      this.removeChild(this._thunderstormParticle.name, this._thunderstormParticle)
     }
 
     this._thunderstormParticle = new ThunderstormParticleEntity({
@@ -33,7 +34,7 @@ export class ThunderstormSkyEntity extends AbstractEntity {
       },
     })
     this._thunderstormParticle.addEventListener(EntityEventType.ExitFrame, this._createThunderstormParticle)
-    this.addChild(this._thunderstormParticle)
+    this.addChild(this._thunderstormParticle.name, this._thunderstormParticle)
   }
 
   /**

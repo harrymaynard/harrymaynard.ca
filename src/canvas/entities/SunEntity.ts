@@ -4,6 +4,7 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
  * Sun entity.
  */
 export class SunEntity extends AbstractEntity {
+  public readonly name: string = 'sun'
  
   /**
    * Draw the entity on the canvas.

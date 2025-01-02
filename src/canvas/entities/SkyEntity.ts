@@ -5,11 +5,13 @@ import { WeatherFactory } from '@/weather/factories/WeatherFactory'
 import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
 import { useFeatureFlagStore } from '@/store/FeatureFlagStore'
 import { useWeatherService, WeatherServiceEventType, WeatherService } from '@/weather/services/WeatherService'
+import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
 
 /**
  * Circadian cycle entity, which renders sun, moon, and sky.
  */
 export class SkyEntity extends AbstractEntity {
+  public readonly name: string = 'sky'
   private _weatherService: WeatherService = useWeatherService()
   private _weatherSkyEntity: AbstractEntity | null = null
   
@@ -32,7 +34,7 @@ export class SkyEntity extends AbstractEntity {
         height: position.height,
       },
     })
-    this.addChild(circadianCycleEntity)
+    this.addChild(EntityKeyType.CircadianCycle, circadianCycleEntity)
 
     this._renderWeatherEntities()
   }
@@ -53,7 +55,7 @@ export class SkyEntity extends AbstractEntity {
       })
       const skyEntity = weatherEntityFactory.create(WeatherCodeType.Snow)
       if (skyEntity) {
-        this.addChild(skyEntity)
+        this.addChild(EntityKeyType.WeatherSky, skyEntity)
       }
     }
     
@@ -61,7 +63,7 @@ export class SkyEntity extends AbstractEntity {
     else if (featureFlagStore.isWeatherEnabled) {
       // Remove the existing weather entity.
       if (this._weatherSkyEntity) {
-        this.removeChild(this._weatherSkyEntity)
+        this.removeChild(EntityKeyType.WeatherSky, this._weatherSkyEntity)
       }
 
       const weatherEntityFactory = new WeatherEntityFactory({
@@ -73,7 +75,7 @@ export class SkyEntity extends AbstractEntity {
       this._weatherSkyEntity = weatherEntityFactory.create(weatherType)
       
       if (this._weatherSkyEntity) {
-        this.addChild(this._weatherSkyEntity)
+        this.addChild(EntityKeyType.WeatherSky, this._weatherSkyEntity)
       }
     }
   }

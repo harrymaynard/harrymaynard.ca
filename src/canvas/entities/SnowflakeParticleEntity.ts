@@ -20,6 +20,7 @@ enum SnowflakeAssetType {
  * Snowflake particle entity.
  */
 export class SnowflakeParticleEntity extends AbstractEntity {
+  public readonly name: string = 'snowflake-particle'
   private _assetKey: SnowflakeAssetType
 
   static {
