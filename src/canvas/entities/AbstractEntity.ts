@@ -157,6 +157,29 @@ export abstract class AbstractEntity extends AdvancedEventTarget implements IEnt
   }
 
   /**
+   * Get a child entity by key.
+   * @param key 
+   * @returns AbstractEntity[]
+   */
+  public getChildByKey(key: string): AbstractEntity[] {
+    return this.entities.get(key) || []
+  }
+
+  /**
+   * Resize the entity.
+   */
+  public resize({
+    position,
+    viewport,
+  }: {
+    position?: IBoundingBox
+    viewport?: IBoundingBox
+  }) {
+    this.position = position || this.position
+    this.viewport = viewport || this.viewport
+  }
+
+  /**
    * Set the entity's x-position.
    * @param x The new x-position.
    * @returns void

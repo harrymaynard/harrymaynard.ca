@@ -90,11 +90,13 @@ export class CircadianCycleEntity extends AbstractEntity {
       }
       this._circadianCycleType = circadianCycleType
     } else if (this._planetEntity) {
+      const x: number = (this.viewport.width / 2) - (PLANET_SIZE / 2)
       const y: number = this._getPlanetYPosition(
         circadianCycleType,
         sunriseTime,
         sunsetTime
       )
+      this._planetEntity.setX(x)
       this._planetEntity.setY(y)
     }
   }
