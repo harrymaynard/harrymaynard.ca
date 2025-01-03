@@ -10,6 +10,8 @@ const WAVE_HEIGHT: number = 30
  * @extends AbstractEntity
  */
 export class WaveEntity extends AbstractEntity {
+  public readonly name: string = 'wave'
+
   constructor(params) {
     super(params)
     this.setWidth(WAVE_WIDTH * 2)

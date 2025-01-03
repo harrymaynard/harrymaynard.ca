@@ -19,6 +19,7 @@ enum CloudAssetType {
  * Cloud particle entity.
  */
 export class CloudParticleEntity extends AbstractEntity {
+  public readonly name: string = 'cloud-particle'
   private _assetKey: CloudAssetType
 
   static {

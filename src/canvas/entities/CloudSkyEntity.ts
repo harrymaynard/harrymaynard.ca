@@ -4,6 +4,7 @@ import { EntityEventType } from '@/canvas/enums/EntityEventType'
 import { ParticleFactory } from '@/canvas/factories/ParticleFactory'
 import { ParticleFactoryEnterType } from '@/canvas/enums/ParticleFactoryEnterType'
 import { BoxSideType } from '@/canvas/enums/BoxSideType'
+import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
 
 const SKY_PARTICLE_COUNT: number = 20
 const MIN_PARTICLE_VELOCITY: number = 0.2
@@ -15,6 +16,7 @@ const MAX_PARTICLE_SIZE: number = 200
  * SkyEntity class which handles the sky background entities.
  */
 export class CloudSkyEntity extends AbstractEntity {
+  public readonly name: string = 'cloud-sky'
   private _particleFactory: ParticleFactory
 
   constructor(params) {
@@ -70,9 +72,9 @@ export class CloudSkyEntity extends AbstractEntity {
    * @param event 
    */
   private _handleParticleExit(event: Event): void {
-    const entity: AbstractEntity = event.target as AbstractEntity
+    const entity: AbstractEntity = event.target as unknown as AbstractEntity
     entity.removeEventListener(EntityEventType.ExitFrame, this._handleParticleExit)
-    this.removeChild(entity)
+    this.removeChild(EntityKeyType.Cloud, entity)
     this._particleFactory.create()
   }
 }

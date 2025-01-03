@@ -10,6 +10,8 @@ enum MoonAssetType {
  * Moon entity.
  */
 export class MoonEntity extends AbstractEntity {
+  public readonly name: string = 'moon'
+  
   static {
     loadAssets([
       {

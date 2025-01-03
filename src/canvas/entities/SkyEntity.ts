@@ -5,11 +5,14 @@ import { WeatherFactory } from '@/weather/factories/WeatherFactory'
 import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
 import { useFeatureFlagStore } from '@/store/FeatureFlagStore'
 import { useWeatherService, WeatherServiceEventType, WeatherService } from '@/weather/services/WeatherService'
+import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
+import { IBoundingBox } from '@/canvas/interfaces/IBoundingBox'
 
 /**
  * Circadian cycle entity, which renders sun, moon, and sky.
  */
 export class SkyEntity extends AbstractEntity {
+  public readonly name: string = 'sky'
   private _weatherService: WeatherService = useWeatherService()
   private _weatherSkyEntity: AbstractEntity | null = null
   
@@ -32,7 +35,7 @@ export class SkyEntity extends AbstractEntity {
         height: position.height,
       },
     })
-    this.addChild(circadianCycleEntity)
+    this.addChild(EntityKeyType.CircadianCycle, circadianCycleEntity)
 
     this._renderWeatherEntities()
   }
@@ -53,7 +56,7 @@ export class SkyEntity extends AbstractEntity {
       })
       const skyEntity = weatherEntityFactory.create(WeatherCodeType.Snow)
       if (skyEntity) {
-        this.addChild(skyEntity)
+        this.addChild(EntityKeyType.WeatherSky, skyEntity)
       }
     }
     
@@ -61,7 +64,7 @@ export class SkyEntity extends AbstractEntity {
     else if (featureFlagStore.isWeatherEnabled) {
       // Remove the existing weather entity.
       if (this._weatherSkyEntity) {
-        this.removeChild(this._weatherSkyEntity)
+        this.removeChild(EntityKeyType.WeatherSky, this._weatherSkyEntity)
       }
 
       const weatherEntityFactory = new WeatherEntityFactory({
@@ -73,7 +76,7 @@ export class SkyEntity extends AbstractEntity {
       this._weatherSkyEntity = weatherEntityFactory.create(weatherType)
       
       if (this._weatherSkyEntity) {
-        this.addChild(this._weatherSkyEntity)
+        this.addChild(EntityKeyType.WeatherSky, this._weatherSkyEntity)
       }
     }
   }
@@ -82,4 +85,31 @@ export class SkyEntity extends AbstractEntity {
    * Empty draw method for the sky entity.
    */
   public draw(): void {}
+
+  /**
+   * Resize the sky entity.
+   */
+  public resize({
+    position,
+    viewport,
+  }: {
+    position?: IBoundingBox
+    viewport?: IBoundingBox
+  }) {
+    super.resize({ position, viewport })
+
+    // Resize the circadian cycle entity.
+    const circadianCycleEntity = this.getChildByKey(EntityKeyType.CircadianCycle)[0]
+    circadianCycleEntity.resize({
+      position: this.position,
+      viewport: this.viewport,
+    })
+
+    // Resize the weather sky entity.
+    const weatherSkyEntity = this.getChildByKey(EntityKeyType.WeatherSky)[0]
+    weatherSkyEntity?.resize({
+      position: this.position,
+      viewport: this.viewport,
+    })
+  }
 }
