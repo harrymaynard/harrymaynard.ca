@@ -150,7 +150,9 @@ export abstract class AbstractEntity extends AdvancedEventTarget implements IEnt
    */
   public removeChild(key: string, entity: AbstractEntity): void {
     const entities = this.entities.get(key)
-    const index = entities?.indexOf(entity) || -1
+    const index = Array.isArray(entities)
+      ? entities.indexOf(entity)
+      : -1
     if (index > -1) {
       entities?.splice(index, 1)
     }
