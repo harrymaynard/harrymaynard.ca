@@ -1,7 +1,6 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
-import { getRadiansFromDegrees } from '@/canvas/helpers/NumberHelper'
 import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
 
 enum CloudAssetType {
@@ -15,12 +14,17 @@ enum CloudAssetType {
   Cloud08 = '/images/weather/cloud-08.svg',
 }
 
+const MAX_WIDTH: number = 256
+const MAX_HEIGHT: number = 200
+
 /**
  * Cloud particle entity.
  */
 export class CloudParticleEntity extends AbstractEntity {
   public readonly name: string = 'cloud-particle'
   private _assetKey: CloudAssetType
+
+  private static scale: number = 1
 
   static {
     loadAssets([
@@ -59,13 +63,25 @@ export class CloudParticleEntity extends AbstractEntity {
     ]).then((assets) => {
       CloudParticleEntity.assets = assets
       CloudParticleEntity.isAssetsLoaded = true
+
+      // Calculate the scale based on the maximum width and height of the assets.
+      const maxWidth = Math.max(
+        ...Array.from(assets.values()).map((asset) => asset.width)
+      )
+      const maxHeight = Math.max(
+        ...Array.from(assets.values()).map((asset) => asset.height)
+      )
+      CloudParticleEntity.scale = Math.min(
+        MAX_WIDTH / maxWidth,
+        MAX_HEIGHT / maxHeight
+      )
     })
   }
 
   constructor(params) {
-    super(params)
-
-    this._assetKey = getRandomAssetKey<CloudAssetType>([
+    // Determine the asset key before calling the super constructor.
+    // This is necessary to set the width and height of the entity.
+    const assetKey = getRandomAssetKey<CloudAssetType>([
       CloudAssetType.Cloud01,
       CloudAssetType.Cloud02,
       CloudAssetType.Cloud03,
@@ -75,6 +91,14 @@ export class CloudParticleEntity extends AbstractEntity {
       CloudAssetType.Cloud07,
       CloudAssetType.Cloud08,
     ])
+    const width = CloudParticleEntity.assets.get(assetKey).width
+    const height = CloudParticleEntity.assets.get(assetKey).height
+    params.position.width = width
+    params.position.height = height
+
+    super(params)
+
+    this._assetKey = assetKey
   }
 
   /**
@@ -86,26 +110,13 @@ export class CloudParticleEntity extends AbstractEntity {
     
     const image = CloudParticleEntity.assets.get(this._assetKey)
     if (image) {
-      const radians: number = getRadiansFromDegrees(this.position.rotation || 0)
-      
-      this.context.save()
-      this.context.translate(
-        this.position.x + (this.position.width / 2),
-        this.position.y + (this.position.height / 2)
-      )
-      this.context.rotate(radians)
-      this.context.translate(
-        -this.position.width / 2,
-        -this.position.height / 2
-      )
       this.context.drawImage(
         image,
-        0,
-        0,
-        this.position.width,
-        this.position.height
+        this.position.x,
+        this.position.y,
+        image.width * CloudParticleEntity.scale,
+        image.height * CloudParticleEntity.scale
       )
-      this.context.restore()
     }
   }
 }

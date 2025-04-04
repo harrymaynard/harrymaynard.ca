@@ -9,8 +9,6 @@ import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
 const SKY_PARTICLE_COUNT: number = 20
 const MIN_PARTICLE_VELOCITY: number = 0.2
 const MAX_PARTICLE_VELOCITY: number = 0.7
-const MIN_PARTICLE_SIZE: number = 100
-const MAX_PARTICLE_SIZE: number = 200
 
 /**
  * SkyEntity class which handles the sky background entities.
@@ -30,10 +28,6 @@ export class CloudSkyEntity extends AbstractEntity {
       parentEntity: this,
       createOptions: {
         entityClass: CloudParticleEntity,
-        sizeRange: {
-          min: MIN_PARTICLE_SIZE,
-          max: MAX_PARTICLE_SIZE,
-        },
         velocityVectorRange: {
           minXVelocity: -MIN_PARTICLE_VELOCITY,
           maxXVelocity: -MAX_PARTICLE_VELOCITY,
