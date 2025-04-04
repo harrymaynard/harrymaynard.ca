@@ -35,10 +35,13 @@ export class ParticleFactory {
     enterType?: ParticleFactoryEnterType,
   } = {}): void {
     for (let i = 0; i < count; i++) {
-      const entitySize: number = getRandomNumberInRange(
-        this._createOptions.sizeRange.min,
-        this._createOptions.sizeRange.max
-      )
+      const entitySize: number =
+        this._createOptions.sizeRange
+          ? getRandomNumberInRange(
+              this._createOptions.sizeRange.min,
+              this._createOptions.sizeRange.max
+            )
+          : 0
       const xVelocity: number = getRandomNumberInRange(
         this._createOptions.velocityVectorRange.minXVelocity,
         this._createOptions.velocityVectorRange.maxXVelocity
