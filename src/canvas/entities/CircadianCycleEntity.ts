@@ -5,10 +5,16 @@ import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { useWeatherService, WeatherService } from '@/weather/services/WeatherService'
 import { Transition } from '@/canvas/transitions/Transition'
 import { EntityKeyType } from '@/canvas/enums/EntityKeyType'
+import { ParticleFactory } from '@/canvas/factories/ParticleFactory'
+import { ParticleFactoryEnterType } from '@/canvas/enums/ParticleFactoryEnterType'
+import { StarParticleEntity } from '@/canvas/entities/StarParticleEntity'
 
 const PLANET_SIZE: number = 100
 const SINGLE_DAY_DURATION: number = 24 * 60 * 60 * 1000
 const NIGHT_SKY_TRANSITION_DURATION: number = 2000
+const STAR_MIN_SIZE: number = 1
+const STAR_MAX_SIZE: number = 2
+const STAR_COUNT: number = 100
 
 enum CircadianCycleType {
   Day = 'day',
@@ -25,12 +31,39 @@ export class CircadianCycleEntity extends AbstractEntity {
   private _weatherService: WeatherService = useWeatherService()
   private _cachedWeatherData: IWeatherResponseDTO | null = null
   private _fadeTransition: Transition | null = null
+  private _starFactory: ParticleFactory
 
   constructor(params) {
     super(params)
 
     this._renderSun = this._renderSun.bind(this)
     this._renderMoon = this._renderMoon.bind(this)
+
+    // Create a new particle factory for the stars.
+    this._starFactory = new ParticleFactory({
+      parentEntity: this,
+      createOptions: {
+        entityClass: StarParticleEntity,
+        sizeRange: {
+          min: STAR_MIN_SIZE,
+          max: STAR_MAX_SIZE,
+        },
+        velocityVectorRange: {
+          minXVelocity: 0,
+          maxXVelocity: 0,
+          minYVelocity: 0,
+          maxYVelocity: 0,
+          minRotationVelocity: 0,
+          maxRotationVelocity: 0,
+        },
+      }
+    })
+
+    // Create child entities.
+    this._starFactory.create({
+      count: STAR_COUNT,
+      enterType: ParticleFactoryEnterType.Center,
+    })
 
     this._updatePlanetEntity()
   }
