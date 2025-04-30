@@ -14,6 +14,9 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Linux Libertine", Times New Roman;
+  -webkit-font-smoothing: subpixel-antialiased;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 }
 #app-root-component {
   -webkit-font-smoothing: antialiased;
