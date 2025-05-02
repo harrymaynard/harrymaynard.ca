@@ -104,7 +104,7 @@ export class RootEntity extends AbstractEntity {
     const waveEntity = this.getChildByKey(EntityKeyType.Wave)[0]
     waveEntity.resize({
       position: {
-        ...this.position,
+        ...waveEntity.position,
         y: this.position.height / 2,
       },
       viewport: this.viewport,
