@@ -1,4 +1,4 @@
-import { defineConfig, splitVendorChunkPlugin } from 'vite'
+import { defineConfig } from 'vite'
 import eslintPlugin from 'vite-plugin-eslint'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename)
 export default defineConfig({
   plugins: [
     vue(),
-    splitVendorChunkPlugin(),
     eslintPlugin()
   ],
   resolve: {
