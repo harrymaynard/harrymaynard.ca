@@ -18,6 +18,9 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
+body {
+  cursor: url('/images/cursors/cursor-24.png') 3 0, default;
+}
 #app-root-component {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
