@@ -83,7 +83,6 @@ $icon-size: 40px;
 
   .title {
     font-size: 48px;
-    cursor: default;
     margin-right: -12px;
     color: #000;
     opacity: 0;
