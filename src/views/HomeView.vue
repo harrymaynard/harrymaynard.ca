@@ -83,7 +83,6 @@ $icon-size: 40px;
 
   .title {
     font-size: 48px;
-    margin-right: -12px;
     color: #000;
     opacity: 0;
     transform: translateY(10px);
@@ -103,8 +102,9 @@ $icon-size: 40px;
       display: inline-block;
       
       .icon {
-        width: 10px;
-        height: 10px;
+        $icon-start-size: 10px;
+        width: $icon-start-size;
+        height: $icon-start-size;
         opacity: 0;
         color: #FFF;
         filter: drop-shadow(0px 0px 3px #679ebf);
@@ -132,20 +132,6 @@ $icon-size: 40px;
       width: $icon-size;
       height: $icon-size;
     }
-  }
-}
-@keyframes blink {
-  0% {
-    visibility: visible;
-  }
-  49% {
-    visibility: visible;
-  }
-  50% {
-    visibility: hidden;
-  }
-  100% {
-    visibility: hidden;
   }
 }
 </style>
