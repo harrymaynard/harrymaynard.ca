@@ -15,14 +15,11 @@
   box-sizing: border-box;
   font-family: "Linux Libertine", Times New Roman;
   -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: subpixel-antialiased;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
 body {
   cursor: url('/images/cursors/cursor-24.png') 3 0, default;
-}
-#app-root-component {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 </style>
