@@ -8,6 +8,12 @@ vi.mock('@/components/AnimatedBackground.vue', () => ({
   },
 }))
 
+vi.mock('@/store/ModalStore', () => ({
+  useModalStore: () => ({
+    open: vi.fn(),
+  }),
+}))
+
 describe('HomeView.vue', () => {
   it('Should render the view', () => {
     const wrapper = mount(HomeView, {
@@ -16,6 +22,7 @@ describe('HomeView.vue', () => {
           AnimatedBackground: true,
           IconLinkedIn: true,
           IconGitHub: true,
+          IconMail: true,
         }
       }
     })

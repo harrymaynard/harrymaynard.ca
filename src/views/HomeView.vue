@@ -1,8 +1,12 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
+import { useModalStore, ModalType } from '@/store/ModalStore'
 import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
+import IconMail from '@/components/icons/IconMail.vue'
 import AnimatedBackground from '@/components/AnimatedBackground.vue'
+
+const modalStore = useModalStore()
 
 const TITLE_ANIMATION_DURATION: number = 1000
 
@@ -29,6 +33,13 @@ const handleMouseLeaveLink = (event: MouseEvent): void => {
 const handleClickLink = (event: MouseEvent): void => {
   const target = event.currentTarget as HTMLElement
   target.classList.remove('has-hover')
+}
+
+const handleClickMailLink = (event: MouseEvent): void => {
+  handleClickLink(event)
+  console.log('Clicked mail link')
+  // TODO: Open mail modal.
+  modalStore.open(ModalType.Mail)
 }
 
 const animateTitle = (): void => {
@@ -65,6 +76,15 @@ const animateTitle = (): void => {
           @click="handleClickLink"
         >
           <IconGitHub class="icon github" />
+        </a>
+        <a
+          href="javascript:void(0)"
+          title="Send me a message"
+          @mouseenter="handleMouseEnterLink"
+          @mouseleave="handleMouseLeaveLink"
+          @click="handleClickMailLink"
+        >
+          <IconMail class="icon message" />
         </a>
       </div>
     </div>
@@ -123,14 +143,18 @@ $icon-size: 40px;
       }
       &.has-hover .icon {
         transform: translateY(-6px);
-        filter: none;
 
         &.linkedin {
           color: #0a66c2;
           background: #FFF;
+          filter: none;
         }
         &.github {
           color: #000;
+          filter: none;
+        }
+        &.message {
+          color: rgb(231, 206, 159);
         }
       }
     }

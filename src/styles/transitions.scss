@@ -1,0 +1,23 @@
+.modal-enter-active,
+.modal-leave-active {
+  transition: all 0.3s ease;
+
+  .modal {
+    transition: all 0.3s ease;
+
+    .modal-dialog {
+      transition: all 0.3s ease;
+    }
+  }
+}
+.modal-enter-from,
+.modal-leave-to {
+  .modal {
+    opacity: 0;
+
+    .modal-dialog {
+      opacity: 0;
+      transform: scale(80%);
+    }
+  }
+}

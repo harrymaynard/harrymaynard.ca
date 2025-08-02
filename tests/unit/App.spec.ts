@@ -8,6 +8,7 @@ describe('App.vue', () => {
       global: {
         stubs: {
           RouterView: true,
+          ModalManager: true,
         }
       }
     })
