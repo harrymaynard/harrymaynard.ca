@@ -117,13 +117,17 @@ const handleTabBackwards = () => {
 
   .modal-dialog  {
     position: relative;
-    max-width: 500px;
+    width: 500px;
     margin: 1.75rem auto;
     background-color: #fff;
     border-radius: 0.3rem;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
     padding: 1rem;
     opacity: 1;
+
+    .modal-title {
+      margin-bottom: 1rem;;
+    }
   }
 }
 </style>

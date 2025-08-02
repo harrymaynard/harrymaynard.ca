@@ -14,6 +14,11 @@ import ModalManager from '@/components/ModalManager.vue'
   font-family:"Manrope";
   src: url("/fonts/Manrope-Regular.woff2") format("woff2");
 }
+
+@font-face {
+  font-family: "Futura BT";
+  src: url("/fonts/futurabt-light-webfont.woff2");
+}
 * {
   margin: 0;
   padding: 0;
