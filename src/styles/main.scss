@@ -1,1 +1,26 @@
-@use './transitions.scss'
+@use './transitions.scss';
+
+
+label, input, textarea {
+  display: block;
+  width: 100%;
+}
+
+input, textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.text-danger {
+  color: #dc3545;
+}
+
+.modal * {
+  font-family: "Futura BT", Arial, Helvetica, sans-serif;
+}
+
+.fieldset {
+  margin-bottom: 1rem;
+}
