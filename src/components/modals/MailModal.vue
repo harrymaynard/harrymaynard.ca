@@ -1,9 +1,12 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useForm, useField } from 'vee-validate'
 import { createValidationEvents } from '@/helpers/ValidationHelper'
+import { APIClient } from '@/services/APIClient'
+import { type IMailRequestDto } from '@/interfaces/IMailRequestDto'
 import Modal from '@/components/modals/Modal.vue'
 import Button, { ButtonClassType } from '@/components/Button.vue'
+import IconEnvelope from '@/components/icons/IconEnvelope.vue'
 
 const emit = defineEmits<{
   (eventName: 'close'): void
@@ -13,6 +16,22 @@ const { validate } = useForm()
 
 const isLoading = ref<boolean>(false)
 
+const turnstileSiteKey: string = import.meta.env.VITE_TURNSTILE_SITE_KEY || ''
+let turnstileToken: string = ''
+
+onMounted(() => {
+  // Initialize Turnstile widget
+  if (window.turnstile) {
+    window.turnstile.render('.cf-turnstile', {
+      sitekey: turnstileSiteKey,
+      callback: (token: string) => {
+        console.log('Turnstile token:', token)
+        turnstileToken = token
+      },
+    })
+  }
+})
+
 const handleClickSubmit = async (): Promise<void> => {
   await validate()
   // const validationResult = await validate()
@@ -21,7 +40,16 @@ const handleClickSubmit = async (): Promise<void> => {
   isLoading.value = true
   try {
     // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    // await new Promise(resolve => setTimeout(resolve, 2000))
+    const payload: IMailRequestDto = {
+      name: name.value,
+      email: email.value,
+      phone: phone.value,
+      message: message.value,
+      turnstileToken,
+    }
+    const response = await APIClient.postMail(payload)
+    console.log('Mail response:', response)
   } catch (error) {
     console.error('Form submission failed:', error)
   }
@@ -123,11 +151,17 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
   <form @submit.prevent="handleClickSubmit">
     <Modal>
       <template #header>
-        <h2>Contact Me</h2>
+        <IconEnvelope class="mail-icon me-3" />
+        Contact Me
       </template>
       <template #body>
         <div class="fieldset">
-          <label for="name">Name:</label>
+          <label
+            for="name"
+            class="mb-1"
+          >
+            Name:
+          </label>
           <input
             id="name"
             v-model="name"
@@ -144,7 +178,12 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           </div>
         </div>
         <div class="fieldset">
-          <label for="email">Email:</label>
+          <label
+            for="email"
+            class="mb-1"
+          >
+            Email:
+          </label>
           <input
             id="email"
             v-model="email"
@@ -161,7 +200,12 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           </div>
         </div>
         <div class="fieldset">
-          <label for="phone">Phone number:</label>
+          <label
+            for="phone"
+            class="mb-1"
+          >
+            Phone number:
+          </label>
           <input
             id="phone"
             v-model="phone"
@@ -178,7 +222,12 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           </div>
         </div>
         <div class="fieldset">
-          <label for="message">Message:</label>
+          <label
+            for="message"
+            class="mb-1"
+          >
+            Message:
+          </label>
           <textarea
             id="message"
             v-model="message"
@@ -192,6 +241,13 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           >
             {{ errorMessageMessage }}
           </div>
+        </div>
+        <div class="fieldset">
+          <label class="mb-1">Prove you're not a robot:</label>
+          <div
+            class="cf-turnstile"
+            :data-sitekey="turnstileSiteKey"
+          />
         </div>
       </template>
       <template #footer>
@@ -215,3 +271,11 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
     </Modal>
   </form>
 </template>
+
+<style lang="scss" scoped>
+.mail-icon {
+  $icon-size: 48px;
+  width: $icon-size;
+  height: $icon-size;
+}
+</style>

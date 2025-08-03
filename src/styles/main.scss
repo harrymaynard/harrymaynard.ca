@@ -1,7 +1,26 @@
 @use '@/styles/variables.scss' as *;
+@use '@/styles/fonts.scss';
 @use '@/styles/spacing.scss';
 @use './transitions.scss';
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Linux Libertine", Times New Roman;
+  -webkit-font-smoothing: subpixel-antialiased;
+  -moz-osx-font-smoothing: subpixel-antialiased;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  cursor: url('/images/cursors/cursor-24.png') 3 0, default;
+}
+
+label {
+  font-weight: bold;
+}
 
 label, input, textarea {
   display: block;
@@ -24,7 +43,7 @@ input, textarea {
 }
 
 .modal * {
-  font-family: "Futura BT", Arial, Helvetica, sans-serif;
+  font-family: "Futura", Arial, Helvetica, sans-serif;
 }
 
 .fieldset {
