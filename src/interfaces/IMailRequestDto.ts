@@ -1,6 +1,7 @@
 export interface IMailRequestDto {
   name: string
   email: string
-  subject: string
+  phone: string
   message: string
+  turnstileToken: string
 }

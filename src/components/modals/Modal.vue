@@ -107,26 +107,36 @@ const handleTabBackwards = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 1050;
   overflow-y: auto;
+  overflow-x: hidden;
   opacity: 1;
 
   .modal-dialog  {
     position: relative;
-    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100% - 3.5rem);
     margin: 1.75rem auto;
-    background-color: #fff;
-    border-radius: 0.3rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-    padding: 1rem;
     opacity: 1;
 
+    .modal-content {
+      width: 500px;
+      display: flex;
+      flex-direction: column;
+      background-color: #fff;
+      border-radius: 0.3rem;
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+      padding: 1rem;  
+    }
+
     .modal-title {
+      font-size: 2rem;
       margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
     }
 
     .modal-footer {
