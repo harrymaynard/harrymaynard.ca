@@ -2,6 +2,7 @@ import { AxiosResponse } from 'axios'
 import { RESTClient } from '@/services/RESTClient'
 import { IWeatherResponseDTO } from '@/weather/interfaces/IWeatherResponseDTO'
 import { IMailRequestDto } from '@/interfaces/IMailRequestDto'
+import { IMailResponseDto } from '@/interfaces/IMailResponseDto'
 
 /**
  * API service singleton.
@@ -18,7 +19,7 @@ export class APIClient {
 
   public static postMail(
     data: IMailRequestDto
-  ): Promise<AxiosResponse<any>> {
-    return RESTClient.post<any>(`/v1/contact`, data)
+  ): Promise<AxiosResponse<IMailResponseDto>> {
+    return RESTClient.post<IMailResponseDto>(`/v1/contact`, data)
   }
 }
