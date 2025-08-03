@@ -91,7 +91,7 @@ const handleTabBackwards = () => {
           <div class="modal-body">
             <slot name="body" />
           </div>
-          <div class="modal-footer justify-content-center">
+          <div class="modal-footer">
             <slot name="footer" />
           </div>
         </div>
@@ -126,7 +126,12 @@ const handleTabBackwards = () => {
     opacity: 1;
 
     .modal-title {
-      margin-bottom: 1rem;;
+      margin-bottom: 1rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
     }
   }
 }
