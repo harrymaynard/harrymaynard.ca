@@ -1,3 +1,10 @@
+<script lang="ts">
+export enum ButtonClassType {
+  Primary = 'primary',
+  Secondary = 'secondary',
+}
+</script>
+
 <script lang="ts" setup>
 import { type PropType } from 'vue'
 
@@ -8,6 +15,11 @@ const props = defineProps({
     type: String as PropType<ButtonType>,
     default: 'button',
     validator: (value: string) => ['button', 'submit', 'reset'].includes(value),
+  },
+  classType: {
+    type: String as PropType<ButtonClassType>,
+    default: ButtonClassType.Primary,
+    validator: (value: string) => Object.values(ButtonClassType).includes(value as ButtonClassType),
   },
   isDisabled: {
     type: Boolean,
@@ -23,6 +35,7 @@ const emit = defineEmits<{
 <template>
   <button
     :type="props.type"
+    :class="props.classType"
     :disabled="props.isDisabled"
     @click="emit('click', $event)"
   >
@@ -31,22 +44,48 @@ const emit = defineEmits<{
 </template>
 
 <style lang="scss" scoped>
+@use '@/styles/variables.scss' as *;
+
 button {
   padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
-  background-color: #007bff;
-  color: white;
   cursor: pointer;
+  font-size: 1rem;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: #0056b3;
+  &:disabled {
+    background-color: #CCC !important;
+    border: solid thin #CCC !important;
+    color: #666 !important;
+    cursor: not-allowed;
   }
 
-  &:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
+  &:focus {
+    outline: $primary-outline;
+  }
+
+  &.primary {
+    background-color: $primary-color;
+    color: $secondary-color;
+    border: solid thin $primary-color;
+
+    &:hover {
+      background-color: $primary-color-hover;
+      border-color: $primary-color-hover;
+    }
+  }
+
+  &.secondary {
+    border: solid thin $primary-color;
+    color: $primary-color;
+    background-color: $secondary-color;
+
+    &:hover {
+      border-color: $primary-color-hover;
+      color: $primary-color-hover;
+      background-color: #EEE;
+    }
   }
 }
 </style>

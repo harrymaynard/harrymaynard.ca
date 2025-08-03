@@ -1,3 +1,5 @@
+@use '@/styles/variables.scss' as *;
+@use '@/styles/spacing.scss';
 @use './transitions.scss';
 
 
@@ -11,6 +13,10 @@ input, textarea {
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 1rem;
+
+  &:focus {
+    outline: $primary-outline;
+  }
 }
 
 .text-danger {

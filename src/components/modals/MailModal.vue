@@ -1,8 +1,9 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { useForm, useField } from 'vee-validate'
 import { createValidationEvents } from '@/helpers/ValidationHelper'
 import Modal from '@/components/modals/Modal.vue'
-import Button from '@/components/Button.vue'
+import Button, { ButtonClassType } from '@/components/Button.vue'
 
 const emit = defineEmits<{
   (eventName: 'close'): void
@@ -10,10 +11,22 @@ const emit = defineEmits<{
 
 const { validate } = useForm()
 
+const isLoading = ref<boolean>(false)
+
 const handleClickSubmit = async (): Promise<void> => {
-  const validationResult = await validate()
-  if (!validationResult.valid) return
-  
+  await validate()
+  // const validationResult = await validate()
+  // if (!validationResult.valid) return
+
+  isLoading.value = true
+  try {
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 2000))
+  } catch (error) {
+    console.error('Form submission failed:', error)
+  }
+  isLoading.value = false
+
   console.log('Form submitted')
   // TODO: Handle form submission.
 }
@@ -119,6 +132,7 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
             id="name"
             v-model="name"
             type="text"
+            :disabled="isLoading"
             v-on="nameValidationEvents"
           >
           <div
@@ -135,6 +149,7 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
             id="email"
             v-model="email"
             type="email"
+            :disabled="isLoading"
             v-on="emailValidationEvents"
           >
           <div
@@ -151,6 +166,7 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
             id="phone"
             v-model="phone"
             type="text"
+            :disabled="isLoading"
             v-on="phoneValidationEvents"
           >
           <div
@@ -166,6 +182,7 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           <textarea
             id="message"
             v-model="message"
+            :disabled="isLoading"
             v-on="messageValidationEvents"
           />
           <div
@@ -179,10 +196,20 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
       </template>
       <template #footer>
         <Button
+          type="submit"
+          class="me-3"
+          :class-type="ButtonClassType.Primary"
+          :is-disabled="isLoading"
+        >
+          Send
+        </Button>
+        <Button
           type="button"
+          :class-type="ButtonClassType.Secondary"
+          :is-disabled="isLoading"
           @click="handleClickClose"
         >
-          Close
+          Cancel
         </Button>
       </template>
     </Modal>
