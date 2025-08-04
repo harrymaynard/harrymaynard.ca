@@ -25,22 +25,21 @@ onMounted(() => {
     window.turnstile.render('.cf-turnstile', {
       sitekey: turnstileSiteKey,
       callback: (token: string) => {
-        console.log('Turnstile token:', token)
         turnstileToken = token
+      },
+      'expired-callback': () => {
+        turnstileToken = ''
       },
     })
   }
 })
 
 const handleClickSubmit = async (): Promise<void> => {
-  await validate()
-  // const validationResult = await validate()
-  // if (!validationResult.valid) return
+  const validationResult = await validate()
+  if (!validationResult.valid) return
 
   isLoading.value = true
   try {
-    // Simulate form submission
-    // await new Promise(resolve => setTimeout(resolve, 2000))
     const payload: IMailRequestDto = {
       name: name.value,
       email: email.value,
@@ -54,9 +53,6 @@ const handleClickSubmit = async (): Promise<void> => {
     console.error('Form submission failed:', error)
   }
   isLoading.value = false
-
-  console.log('Form submitted')
-  // TODO: Handle form submission.
 }
 
 const handleClickClose = (): void => {
