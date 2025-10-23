@@ -71,8 +71,7 @@ const validateEmail = (value: string): string | true => {
 }
 
 const validatePhone = (value: string): string | true => {
-  if (!value) return 'Phone number is required'
-  if (!/^\+?[0-9\s-]+$/.test(value)) return 'Phone number must be valid'
+  if (value && !/^\+?[0-9\s-]+$/.test(value)) return 'Phone number must be valid'
   return true
 }
 
@@ -227,6 +226,7 @@ const messageValidationEvents = createValidationEvents(handleChangeMessage, erro
           <textarea
             id="message"
             v-model="message"
+            rows="4"
             :disabled="isLoading"
             v-on="messageValidationEvents"
           />
