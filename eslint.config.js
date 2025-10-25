@@ -30,6 +30,7 @@ export default typescriptEslint.config(
       'no-console': 'off',
       'no-debugger': 'off',
       '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
     },
   }
 )

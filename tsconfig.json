@@ -16,6 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "useDefineForClassFields": true,
     "noImplicitAny": false,
+    "experimentalDecorators": true,
     "sourceMap": true,
     "paths": {
       "@/*": ["src/*"]

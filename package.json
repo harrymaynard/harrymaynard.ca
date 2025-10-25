@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite --port 3000 --host",
     "build": "vite build",
     "preview": "vite preview --port 3000 --host",
     "test:unit": "vitest",
@@ -16,6 +16,7 @@
     "lodash": "^4.17.21",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.5.0",
+    "reflect-metadata": "^0.2.2",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
   },

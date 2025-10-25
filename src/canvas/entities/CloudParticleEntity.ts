@@ -2,6 +2,7 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
 import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
+import { DrawGlow } from '../decorators/GlowDecorator'
 
 enum CloudAssetType {
   Cloud01 = '/images/weather/cloud-01.svg',
@@ -105,17 +106,25 @@ export class CloudParticleEntity extends AbstractEntity {
    * Draw the entity on the canvas.
    * @returns void
    */
+  @DrawGlow()
   public draw(): void {
     if (!CloudParticleEntity.isAssetsLoaded) return
+    // debugger
     
-    const image = CloudParticleEntity.assets.get(this._assetKey)
+    const image = CloudParticleEntity.assets.get(this._assetKey) as HTMLImageElement
     if (image) {
+      const width: number = image.width * CloudParticleEntity.scale
+      const height: number = image.height * CloudParticleEntity.scale
+      // debugger
+      image.style.padding = `10px`
+      
+      // debugger
       this.context.drawImage(
         image,
         this.position.x,
         this.position.y,
-        image.width * CloudParticleEntity.scale,
-        image.height * CloudParticleEntity.scale
+        width,
+        height
       )
     }
   }
