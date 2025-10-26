@@ -1,7 +1,7 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
-import { loadAssets } from '@/canvas/helpers/AssetHelper'
+import { getMaxSVGDimensions, loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
-import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
+import { getRandomAssetKey, parseSVG } from '@/canvas/helpers/AssetHelper'
 import { DrawGlow } from '../decorators/GlowDecorator'
 
 enum CloudAssetType {
@@ -23,83 +23,108 @@ const MAX_HEIGHT: number = 200
  */
 export class CloudParticleEntity extends AbstractEntity {
   public readonly name: string = 'cloud-particle'
-  private _assetKey: CloudAssetType
+  public assetKey: CloudAssetType
 
   private static scale: number = 1
 
   static {
     loadAssets([
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud01,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud02,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud03,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud04,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud05,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud06,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud07,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: CloudAssetType.Cloud08,
       }
-    ]).then((assets) => {
+    ]).then(async (assets) => {
       CloudParticleEntity.assets = assets
-      CloudParticleEntity.isAssetsLoaded = true
+
+      const { maxWidth, maxHeight } = getMaxSVGDimensions(Array.from(assets.values()))
 
       // Calculate the scale based on the maximum width and height of the assets.
-      const maxWidth = Math.max(
-        ...Array.from(assets.values()).map((asset) => asset.width)
-      )
-      const maxHeight = Math.max(
-        ...Array.from(assets.values()).map((asset) => asset.height)
-      )
+      // const maxWidth = Math.max(
+      //   ...Array.from(assets.values()).map((asset) => asset.width)
+      // )
+      // const maxHeight = Math.max(
+      //   ...Array.from(assets.values()).map((asset) => asset.height)
+      // )
       CloudParticleEntity.scale = Math.min(
         MAX_WIDTH / maxWidth,
         MAX_HEIGHT / maxHeight
       )
+
+      debugger
+      // Modify SVG assets to apply scaling and padding.
+      const promises: Array<Promise<void>> = [] 
+      CloudParticleEntity.assets.forEach((asset, key) => {
+        const promise = parseSVG(asset, CloudParticleEntity.scale, 10).then((svg) => {
+          CloudParticleEntity.assets.set(key, svg)
+        })
+        promises.push(promise)
+      })
+      try {
+        await Promise.all(promises)
+      } catch (error) {
+        console.error('Error parsing SVG assets:', error)
+      }
+      
+
+      CloudParticleEntity.isAssetsLoaded = true
     })
   }
 
   constructor(params) {
     // Determine the asset key before calling the super constructor.
     // This is necessary to set the width and height of the entity.
-    const assetKey = getRandomAssetKey<CloudAssetType>([
+    const assetKey: CloudAssetType = getRandomAssetKey<CloudAssetType>([
       CloudAssetType.Cloud01,
-      CloudAssetType.Cloud02,
-      CloudAssetType.Cloud03,
-      CloudAssetType.Cloud04,
-      CloudAssetType.Cloud05,
-      CloudAssetType.Cloud06,
-      CloudAssetType.Cloud07,
-      CloudAssetType.Cloud08,
+      // CloudAssetType.Cloud02,
+      // CloudAssetType.Cloud03,
+      // CloudAssetType.Cloud04,
+      // CloudAssetType.Cloud05,
+      // CloudAssetType.Cloud06,
+      // CloudAssetType.Cloud07,
+      // CloudAssetType.Cloud08,
     ])
-    const width = CloudParticleEntity.assets.get(assetKey).width
-    const height = CloudParticleEntity.assets.get(assetKey).height
+    const asset = CloudParticleEntity.assets.get(assetKey)
+    let width: number = 1
+    let height: number = 1
+
+    debugger
+    width = asset.width
+    height = asset.height
+    
     params.position.width = width
     params.position.height = height
 
     super(params)
 
-    this._assetKey = assetKey
+    this.assetKey = assetKey
   }
 
   /**
@@ -108,15 +133,16 @@ export class CloudParticleEntity extends AbstractEntity {
    */
   @DrawGlow()
   public draw(): void {
+    debugger
     if (!CloudParticleEntity.isAssetsLoaded) return
     // debugger
     
-    const image = CloudParticleEntity.assets.get(this._assetKey) as HTMLImageElement
+    const image = CloudParticleEntity.assets.get(this.assetKey) as HTMLImageElement
     if (image) {
-      const width: number = image.width * CloudParticleEntity.scale
-      const height: number = image.height * CloudParticleEntity.scale
+      const width: number = this.position.width
+      const height: number = this.position.height
       // debugger
-      image.style.padding = `10px`
+      // image.style.padding = `10px`
       
       // debugger
       this.context.drawImage(

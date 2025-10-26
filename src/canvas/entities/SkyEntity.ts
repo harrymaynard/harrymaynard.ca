@@ -1,7 +1,7 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { CircadianCycleEntity } from '@/canvas/entities/CircadianCycleEntity'
 import { WeatherEntityFactory } from '@/canvas/factories/WeatherEntityFactory'
-import { WeatherFactory } from '@/weather/factories/WeatherFactory'
+// import { WeatherFactory } from '@/weather/factories/WeatherFactory'
 import { WeatherCodeType } from '@/weather/enums/WeatherCodeType'
 import { useFeatureFlagStore } from '@/store/FeatureFlagStore'
 import { useWeatherService, WeatherServiceEventType, WeatherService } from '@/weather/services/WeatherService'
@@ -70,10 +70,10 @@ export class SkyEntity extends AbstractEntity {
       const weatherEntityFactory = new WeatherEntityFactory({
         parentEntity: this,
       })
-      const weatherType: WeatherCodeType = WeatherFactory.createWeatherCodeType(
-        weatherData.weather.conditions[0].code
-      )
-      this._weatherSkyEntity = weatherEntityFactory.create(weatherType)
+      // const weatherType: WeatherCodeType = WeatherFactory.createWeatherCodeType(
+      //   weatherData.weather.conditions[0].code
+      // )
+      this._weatherSkyEntity = weatherEntityFactory.create(WeatherCodeType.Clouds)
       
       if (this._weatherSkyEntity) {
         this.addChild(EntityKeyType.WeatherSky, this._weatherSkyEntity)

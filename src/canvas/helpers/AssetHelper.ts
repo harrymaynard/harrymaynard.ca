@@ -70,7 +70,7 @@ export const loadSVG = async (url: string): Promise<SVGElement> => {
   const { data } = await axios.get(url, {
     responseType: 'text' // Specify response type as 'text' for SVG
   })
-  return data as SVGElement
+  return data
 }
 
 /**
@@ -81,4 +81,64 @@ export const loadSVG = async (url: string): Promise<SVGElement> => {
 export const getRandomAssetKey = <T>(assets: Array<string>): T => {
   const randomIndex = Math.floor(Math.random() * assets.length)
   return assets[randomIndex] as T
+}
+
+export const parseSVG = (
+  svgString: string,
+  scale: number,
+  padding: number = 0
+): Promise<HTMLImageElement> => {
+  const parser = new DOMParser()
+  const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml')
+  const svg = xmlDoc.documentElement as unknown as SVGElement
+
+  debugger
+  if (padding > 0) {
+    const width: number = parseInt(svg.getAttribute('width') as string)
+    const height: number = parseInt(svg.getAttribute('height') as string)
+    const scaledWidth: number = width * scale
+    const scaledHeight: number = height * scale
+
+    // Scale factor for at least padding on all sides.
+    const scaleFactorWidth: number = scaledWidth / (scaledWidth + padding * 2)
+    const scaleFactorHeight: number = scaledHeight / (scaledHeight + padding * 2)
+    const finalScaleFactor: number = Math.min(scaleFactorWidth, scaleFactorHeight)
+    
+    // Set viewBox with minumum padding on all sides using scaled sizes as final dimensions.
+    svg.setAttribute('viewBox', `-${padding} -${padding} ${width + ((padding * 2) / finalScaleFactor)} ${height + ((padding * 2) / finalScaleFactor)}`)
+  }
+
+  // Return promise containing SVG in an Image element.
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = reject
+
+    const svgDataUrl: string = `data:image/svg+xml;base64,${btoa(new XMLSerializer().serializeToString(svg))}`
+    image.src = svgDataUrl
+  })
+}
+
+
+export const getMaxSVGDimensions = (assets: Array<string>) => {
+  let maxWidth: number = 0
+  let maxHeight: number = 0
+
+  assets.forEach((svgString) => {
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml')
+    const svg = xmlDoc.documentElement as unknown as SVGElement
+
+    const width: number = parseInt(svg.getAttribute('width') as string)
+    const height: number = parseInt(svg.getAttribute('height') as string)
+
+    if (width > maxWidth) {
+      maxWidth = width
+    }
+    if (height > maxHeight) {
+      maxHeight = height
+    }
+  })
+
+  return { maxWidth, maxHeight }
 }

@@ -3,7 +3,7 @@ import { loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
 import { getRadiansFromDegrees } from '@/canvas/helpers/NumberHelper'
 import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
-import { DrawGlow } from '../decorators/GlowDecorator'
+// import { DrawGlow } from '../decorators/GlowDecorator'
 
 enum SnowflakeAssetType {
   Snowflake01 = '/images/weather/snowflake-01.svg',
@@ -88,7 +88,7 @@ export class SnowflakeParticleEntity extends AbstractEntity {
    * Draw the entity on the canvas.
    * @returns void
    */
-  @DrawGlow()
+  // @DrawGlow()
   public draw(): void {
     if (!SnowflakeParticleEntity.isAssetsLoaded) return
     

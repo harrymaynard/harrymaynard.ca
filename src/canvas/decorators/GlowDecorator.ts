@@ -26,6 +26,16 @@ export function DrawGlow(
       this.context.shadowOffsetX = 0 // Horizontal offset of the shadow
       // @ts-expect-error: Accessing context from parent class
       this.context.shadowOffsetY = 0 // Vertical offset of the shadow
+
+      // debugger
+      // // @ts-expect-error: Accessing context from parent class
+      // if (this.assetKey && target) {
+      //   // @ts-expect-error: Accessing context from parent class
+      //   const xmlString = target.constructor.assets.get(this.assetKey) as string
+      //   const parser = new DOMParser()
+      //   const xmlDoc = parser.parseFromString(xmlString, "application/xml")
+      //   console.log(xmlDoc)
+      // }
       
       const result = originalMethod.apply(this, args)
       

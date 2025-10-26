@@ -1,5 +1,5 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
-import { DrawGlow } from '../decorators/GlowDecorator'
+// import { DrawGlow } from '../decorators/GlowDecorator'
 
 const WAVE_COLOR_TOP: string = '#679ebf'
 const WAVE_COLOR_BOTTOM: string = '#FFF'
@@ -35,7 +35,7 @@ export class WaveEntity extends AbstractEntity {
    * draw the entity on the canvas.
    * @returns void
    */
-  @DrawGlow()
+  // @DrawGlow()
   public draw(): void {
     const gradient = this.context.createLinearGradient(0, this.frameHeight/2, 0, this.frameHeight)
     gradient.addColorStop(0, WAVE_COLOR_TOP)
