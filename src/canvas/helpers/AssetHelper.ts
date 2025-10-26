@@ -92,7 +92,6 @@ export const parseSVG = (
   const xmlDoc = parser.parseFromString(svgString, 'image/svg+xml')
   const svg = xmlDoc.documentElement as unknown as SVGElement
 
-  debugger
   if (padding > 0) {
     const width: number = parseInt(svg.getAttribute('width') as string)
     const height: number = parseInt(svg.getAttribute('height') as string)

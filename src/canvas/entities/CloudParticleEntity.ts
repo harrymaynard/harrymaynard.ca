@@ -15,8 +15,8 @@ enum CloudAssetType {
   Cloud08 = '/images/weather/cloud-08.svg',
 }
 
-const MAX_WIDTH: number = 256
-const MAX_HEIGHT: number = 200
+const ASSET_MAX_WIDTH: number = 256
+const ASSET_MAX_HEIGHT: number = 200
 
 /**
  * Cloud particle entity.
@@ -66,19 +66,11 @@ export class CloudParticleEntity extends AbstractEntity {
 
       const { maxWidth, maxHeight } = getMaxSVGDimensions(Array.from(assets.values()))
 
-      // Calculate the scale based on the maximum width and height of the assets.
-      // const maxWidth = Math.max(
-      //   ...Array.from(assets.values()).map((asset) => asset.width)
-      // )
-      // const maxHeight = Math.max(
-      //   ...Array.from(assets.values()).map((asset) => asset.height)
-      // )
       CloudParticleEntity.scale = Math.min(
-        MAX_WIDTH / maxWidth,
-        MAX_HEIGHT / maxHeight
+        ASSET_MAX_WIDTH / maxWidth,
+        ASSET_MAX_HEIGHT / maxHeight
       )
 
-      debugger
       // Modify SVG assets to apply scaling and padding.
       const promises: Array<Promise<void>> = [] 
       CloudParticleEntity.assets.forEach((asset, key) => {
@@ -103,24 +95,18 @@ export class CloudParticleEntity extends AbstractEntity {
     // This is necessary to set the width and height of the entity.
     const assetKey: CloudAssetType = getRandomAssetKey<CloudAssetType>([
       CloudAssetType.Cloud01,
-      // CloudAssetType.Cloud02,
-      // CloudAssetType.Cloud03,
-      // CloudAssetType.Cloud04,
-      // CloudAssetType.Cloud05,
-      // CloudAssetType.Cloud06,
-      // CloudAssetType.Cloud07,
-      // CloudAssetType.Cloud08,
+      CloudAssetType.Cloud02,
+      CloudAssetType.Cloud03,
+      CloudAssetType.Cloud04,
+      CloudAssetType.Cloud05,
+      CloudAssetType.Cloud06,
+      CloudAssetType.Cloud07,
+      CloudAssetType.Cloud08,
     ])
     const asset = CloudParticleEntity.assets.get(assetKey)
-    let width: number = 1
-    let height: number = 1
 
-    debugger
-    width = asset.width
-    height = asset.height
-    
-    params.position.width = width
-    params.position.height = height
+    params.position.width = asset?.width || 1
+    params.position.height = asset?.height || 1
 
     super(params)
 
@@ -133,18 +119,13 @@ export class CloudParticleEntity extends AbstractEntity {
    */
   @DrawGlow()
   public draw(): void {
-    debugger
     if (!CloudParticleEntity.isAssetsLoaded) return
-    // debugger
     
     const image = CloudParticleEntity.assets.get(this.assetKey) as HTMLImageElement
     if (image) {
       const width: number = this.position.width
       const height: number = this.position.height
-      // debugger
-      // image.style.padding = `10px`
-      
-      // debugger
+    
       this.context.drawImage(
         image,
         this.position.x,
