@@ -2,7 +2,8 @@ import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
 import { getRadiansFromDegrees } from '@/canvas/helpers/NumberHelper'
-import { getRandomAssetKey } from '@/canvas/helpers/AssetHelper'
+import { getRandomAssetKey, normalizeSVGAssets } from '@/canvas/helpers/AssetHelper'
+import { DrawGlow } from '../decorators/GlowDecorator'
 
 enum SnowflakeAssetType {
   Snowflake01 = '/images/weather/snowflake-01.svg',
@@ -26,42 +27,46 @@ export class SnowflakeParticleEntity extends AbstractEntity {
   static {
     loadAssets([
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake01,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake02,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake03,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake04,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake05,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake06,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake07,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake08,
       },
       {
-        type: AssetType.Image,
+        type: AssetType.SVG,
         url: SnowflakeAssetType.Snowflake09,
       }
-    ]).then((assets) => {
+    ])
+    .then(async (assets) => {
+      return await normalizeSVGAssets(assets, 1, 0)
+    })
+    .then((assets) => {
       SnowflakeParticleEntity.assets = assets
       SnowflakeParticleEntity.isAssetsLoaded = true
     })
@@ -87,6 +92,7 @@ export class SnowflakeParticleEntity extends AbstractEntity {
    * Draw the entity on the canvas.
    * @returns void
    */
+  @DrawGlow()
   public draw(): void {
     if (!SnowflakeParticleEntity.isAssetsLoaded) return
     
