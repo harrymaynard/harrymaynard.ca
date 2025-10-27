@@ -1,5 +1,3 @@
-import 'reflect-metadata'
-
 const DEFAULT_GLOW_SIZE: number = 10
 const DEFAULT_GLOW_COLOR: string = 'rgba(0, 0, 0, 0.5)'
 
@@ -27,16 +25,6 @@ export function DrawGlow(
       // @ts-expect-error: Accessing context from parent class
       this.context.shadowOffsetY = 0 // Vertical offset of the shadow
 
-      // debugger
-      // // @ts-expect-error: Accessing context from parent class
-      // if (this.assetKey && target) {
-      //   // @ts-expect-error: Accessing context from parent class
-      //   const xmlString = target.constructor.assets.get(this.assetKey) as string
-      //   const parser = new DOMParser()
-      //   const xmlDoc = parser.parseFromString(xmlString, "application/xml")
-      //   console.log(xmlDoc)
-      // }
-      
       const result = originalMethod.apply(this, args)
       
       // @ts-expect-error: Accessing context from parent class

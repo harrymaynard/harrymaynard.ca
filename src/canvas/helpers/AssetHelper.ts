@@ -6,7 +6,9 @@ import { IAsset } from '../interfaces/IAsset'
  * Load entity assets.
  * @returns Promise<Map<string, any>>
  */
-export const loadAssets = async (assets: Array<IAsset>): Promise<Map<string, any>> => {
+export const loadAssets = async (
+  assets: Array<IAsset>
+): Promise<Map<string, any>> => {
   const assetMap = new Map<string, any>()
   const loadPromises: Array<Promise<void>> = []
 
@@ -83,7 +85,34 @@ export const getRandomAssetKey = <T>(assets: Array<string>): T => {
   return assets[randomIndex] as T
 }
 
-export const parseSVG = (
+/**
+ * Modify SVG assets to apply scaling and padding.
+ * @param assets 
+ * @param scale 
+ * @param padding 
+ * @returns Promise<Map<string, any>>
+ */
+export const normalizeSVGAssets = async (
+  assets: Map<string, any>,
+  scale: number,
+  padding: number = 0
+) => {
+  const promises: Array<Promise<void>> = [] 
+  assets.forEach((asset, key) => {
+    const promise = normalizeSVGAsset(asset, scale, padding).then((svg) => {
+      assets.set(key, svg)
+    })
+    promises.push(promise)
+  })
+  try {
+    await Promise.all(promises)
+  } catch (error) {
+    console.error('Error parsing SVG assets:', error)
+  }
+  return assets
+}
+
+export const normalizeSVGAsset = (
   svgString: string,
   scale: number,
   padding: number = 0

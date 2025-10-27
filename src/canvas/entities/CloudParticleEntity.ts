@@ -1,7 +1,7 @@
 import { AbstractEntity } from '@/canvas/entities/AbstractEntity'
 import { getMaxSVGDimensions, loadAssets } from '@/canvas/helpers/AssetHelper'
 import { AssetType } from '@/canvas/enums/AssetType'
-import { getRandomAssetKey, parseSVG } from '@/canvas/helpers/AssetHelper'
+import { getRandomAssetKey, normalizeSVGAssets } from '@/canvas/helpers/AssetHelper'
 import { DrawGlow } from '../decorators/GlowDecorator'
 
 enum CloudAssetType {
@@ -61,31 +61,17 @@ export class CloudParticleEntity extends AbstractEntity {
         type: AssetType.SVG,
         url: CloudAssetType.Cloud08,
       }
-    ]).then(async (assets) => {
-      CloudParticleEntity.assets = assets
-
+    ])
+    .then(async (assets) => {
       const { maxWidth, maxHeight } = getMaxSVGDimensions(Array.from(assets.values()))
-
       CloudParticleEntity.scale = Math.min(
         ASSET_MAX_WIDTH / maxWidth,
         ASSET_MAX_HEIGHT / maxHeight
       )
-
-      // Modify SVG assets to apply scaling and padding.
-      const promises: Array<Promise<void>> = [] 
-      CloudParticleEntity.assets.forEach((asset, key) => {
-        const promise = parseSVG(asset, CloudParticleEntity.scale, 10).then((svg) => {
-          CloudParticleEntity.assets.set(key, svg)
-        })
-        promises.push(promise)
-      })
-      try {
-        await Promise.all(promises)
-      } catch (error) {
-        console.error('Error parsing SVG assets:', error)
-      }
-      
-
+      return await normalizeSVGAssets(assets, CloudParticleEntity.scale, 10)
+    })
+    .then(async (assets) => {
+      CloudParticleEntity.assets = assets
       CloudParticleEntity.isAssetsLoaded = true
     })
   }
