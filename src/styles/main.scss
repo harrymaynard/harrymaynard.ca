@@ -7,7 +7,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Linux Libertine", Times New Roman;
+  font-family: Manrope, sans-serif;
   -webkit-font-smoothing: subpixel-antialiased;
   -moz-osx-font-smoothing: subpixel-antialiased;
   font-synthesis: none;
@@ -40,10 +40,6 @@ input, textarea {
 
 .text-danger {
   color: #dc3545;
-}
-
-.modal * {
-  font-family: "Futura", Arial, Helvetica, sans-serif;
 }
 
 .fieldset {
