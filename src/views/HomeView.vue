@@ -43,7 +43,7 @@ const animateTitle = (): void => {
     <AnimatedBackground />
     <div>
       <h1 :class="`title ${isPageMounted ? 'show' : ''}`">
-        <span>Harry Maynard</span>
+        <span class="text">Harry Maynard</span>
       </h1>
       <div :class="`links ${isTitleAnimationComplete ? 'title-animation-complete' : ''}`">
         <a
@@ -82,11 +82,18 @@ $icon-size: 40px;
   text-align: center;
 
   .title {
-    font-size: 48px;
-    color: #000;
     opacity: 0;
     transform: translateY(10px);
     transition: all 1s ease;
+    
+    .text {
+      font-style: normal;
+      font-weight: 600;
+      color: #EEE;
+      font-size: 44px;
+      letter-spacing: -0.88px;
+      text-shadow: 0 0 8px #000;
+    }
 
     &.show {
       transform: translateY(0);
