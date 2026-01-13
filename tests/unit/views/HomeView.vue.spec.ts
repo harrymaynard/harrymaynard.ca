@@ -8,12 +8,19 @@ vi.mock('@/components/AnimatedBackground.vue', () => ({
   },
 }))
 
+vi.mock('@/components/PerlinNoiseWaveBackground.vue', () => ({
+  default: {
+    template: '<div class="perlin-noise-wave-background-mock"></div>',
+  },
+}))
+
 describe('HomeView.vue', () => {
   it('Should render the view', () => {
     const wrapper = mount(HomeView, {
       global: {
         stubs: {
           AnimatedBackground: true,
+          PerlinNoiseWaveBackground: true,
           IconLinkedIn: true,
           IconGitHub: true,
         }

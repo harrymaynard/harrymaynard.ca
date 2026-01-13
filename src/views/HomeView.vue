@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
-import AnimatedBackground from '@/components/AnimatedBackground.vue'
+import PerlinNoiseWaveBackground from '@/components/PerlinNoiseWaveBackground.vue'
 
 const TITLE_ANIMATION_DURATION: number = 1000
 
@@ -40,7 +40,7 @@ const animateTitle = (): void => {
 
 <template>
   <div class="home-view">
-    <AnimatedBackground />
+    <PerlinNoiseWaveBackground />
     <div>
       <h1 :class="`title ${isPageMounted ? 'show' : ''}`">
         <span class="text">Harry Maynard</span>
@@ -114,7 +114,7 @@ $icon-size: 40px;
         height: $icon-start-size;
         opacity: 0;
         color: #FFF;
-        filter: drop-shadow(0px 0px 3px #679ebf);
+        filter: drop-shadow(0px 0px 3px #000);
         transition: all 0.5s ease;
 
         &.linkedin {
@@ -123,7 +123,7 @@ $icon-size: 40px;
       }
       &.has-hover .icon {
         transform: translateY(-6px);
-        filter: none;
+        filter: drop-shadow(0px 0px 6px #FFF);
 
         &.linkedin {
           color: #0a66c2;

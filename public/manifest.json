@@ -1,8 +1,8 @@
 {
   "name": "Harry Maynard",
   "short_name": "Harry Maynard",
-  "theme_color": "#fff",
-  "background_color": "#fff",
+  "theme_color": "#679ebf",
+  "background_color": "#679ebf",
   "display": "browser",
   "orientation": "portrait",
   "scope": "/",
