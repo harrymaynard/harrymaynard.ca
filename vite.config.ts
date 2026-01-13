@@ -13,6 +13,9 @@ export default defineConfig({
     vue(),
     eslintPlugin()
   ],
+  build: {
+    chunkSizeWarningLimit: 2048,
+  },
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
     alias: {

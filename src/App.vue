@@ -20,6 +20,6 @@
   text-rendering: optimizeLegibility;
 }
 body {
-  cursor: url('/images/cursors/cursor-24.png') 3 0, default;
+  cursor: url('/images/cursors/cursor-border-24.png') 3 0, default;
 }
 </style>
