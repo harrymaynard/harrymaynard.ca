@@ -15,6 +15,15 @@ export default defineConfig({
   ],
   build: {
     chunkSizeWarningLimit: 2048,
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('p5')) {
+            return 'vendor-p5'
+          }
+        },
+      },
+    },
   },
   resolve: {
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue'],
