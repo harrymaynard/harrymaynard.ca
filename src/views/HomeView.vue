@@ -4,14 +4,10 @@ import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
 import PerlinNoiseWaveBackground from '@/components/PerlinNoiseWaveBackground.vue'
 
-const TITLE_ANIMATION_DURATION: number = 1000
+const isMounted = ref<boolean>(false)
 
-const isPageMounted = ref<boolean>(false)
-const isTitleAnimationComplete = ref<boolean>(false)
-
-onMounted(() => {
-  animateTitle()
-  isPageMounted.value = true
+onMounted(async () => {
+  isMounted.value = true
 })
 
 const handleMouseEnterLink = (event: MouseEvent): void => {
@@ -30,44 +26,40 @@ const handleClickLink = (event: MouseEvent): void => {
   const target = event.currentTarget as HTMLElement
   target.classList.remove('has-hover')
 }
-
-const animateTitle = (): void => {
-  setTimeout(() => {
-    isTitleAnimationComplete.value = true
-  }, TITLE_ANIMATION_DURATION)
-}
 </script>
 
 <template>
   <div class="home-view">
     <PerlinNoiseWaveBackground />
-    <div>
-      <h1 :class="`title ${isPageMounted ? 'show' : ''}`">
-        <span class="text">Harry Maynard</span>
-      </h1>
-      <div :class="`links ${isTitleAnimationComplete ? 'title-animation-complete' : ''}`">
-        <a
-          href="https://www.linkedin.com/in/harrymaynard/"
-          target="_blank"
-          title="LinkedIn"
-          @mouseenter="handleMouseEnterLink"
-          @mouseleave="handleMouseLeaveLink"
-          @click="handleClickLink"
-        >
-          <IconLinkedIn class="icon linkedin" />
-        </a>
-        <a
-          href="https://github.com/harrymaynard"
-          target="_blank"
-          title="GitHub"
-          @mouseenter="handleMouseEnterLink"
-          @mouseleave="handleMouseLeaveLink"
-          @click="handleClickLink"
-        >
-          <IconGitHub class="icon github" />
-        </a>
+    <Transition name="initial-load">
+      <div v-if="isMounted">
+        <h1 class="title">
+          <span class="text">Harry Maynard</span>
+        </h1>
+        <div class="links">
+          <a
+            href="https://www.linkedin.com/in/harrymaynard/"
+            target="_blank"
+            title="LinkedIn"
+            @mouseenter="handleMouseEnterLink"
+            @mouseleave="handleMouseLeaveLink"
+            @click="handleClickLink"
+          >
+            <IconLinkedIn class="icon linkedin" />
+          </a>
+          <a
+            href="https://github.com/harrymaynard"
+            target="_blank"
+            title="GitHub"
+            @mouseenter="handleMouseEnterLink"
+            @mouseleave="handleMouseLeaveLink"
+            @click="handleClickLink"
+          >
+            <IconGitHub class="icon github" />
+          </a>
+        </div>
       </div>
-    </div>
+    </Transition>
   </div>
 </template>
 
@@ -81,24 +73,13 @@ $icon-size: 40px;
   justify-content: center;
   text-align: center;
 
-  .title {
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 1s ease;
-    
-    .text {
-      font-style: normal;
-      font-weight: 600;
-      color: #EEE;
-      font-size: 44px;
-      letter-spacing: -0.88px;
-      text-shadow: 0 0 8px #000;
-    }
-
-    &.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
+  .title .text {
+    font-style: normal;
+    font-weight: 600;
+    color: #EEE;
+    font-size: 44px;
+    letter-spacing: -0.88px;
+    text-shadow: 0 0 8px #000;
   }
   .links {
     margin-top: 30px;
@@ -109,10 +90,9 @@ $icon-size: 40px;
       display: inline-block;
       
       .icon {
-        $icon-start-size: 10px;
-        width: $icon-start-size;
-        height: $icon-start-size;
-        opacity: 0;
+        opacity: 1;
+        width: $icon-size;
+        height: $icon-size;
         color: #FFF;
         filter: drop-shadow(0px 0px 3px #000);
         transition: all 0.5s ease;
@@ -134,11 +114,30 @@ $icon-size: 40px;
         }
       }
     }
-    &.title-animation-complete .icon {
-      opacity: 1;
-      width: $icon-size;
-      height: $icon-size;
-    }
+  }
+}
+
+.initial-load-enter-active {
+  transition: all 1s ease;
+  .title {
+    transition: all 1s ease;
+  }
+  .links a .icon {
+    transition: all 0.5s ease;
+    transition-delay: 0.5s;
+  }
+}
+
+.initial-load-enter-from {
+  .title {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .links a .icon {
+    $icon-start-size: 10px;
+    width: $icon-start-size;
+    height: $icon-start-size;
+    opacity: 0;
   }
 }
 </style>
