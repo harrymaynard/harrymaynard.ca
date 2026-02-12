@@ -12,7 +12,7 @@
     "lint": "eslint 'src/**/*.{ts,vue}'"
   },
   "dependencies": {
-    "axios": "^1.12.2",
+    "axios": "^1.13.5",
     "lodash": "^4.17.23",
     "p5": "^2.1.2",
     "pinia": "^3.0.3",
