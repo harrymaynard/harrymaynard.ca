@@ -3,11 +3,13 @@ import { mount } from '@vue/test-utils'
 import { createTestingPinia } from '@pinia/testing'
 import AnimatedBackground from '@/components/AnimatedBackground.vue'
 
-vi.mock('axios', () => ({
-  default: {
-    get: vi.fn(() => new Promise((resolve) => resolve({ data: null }))),
-  },
-}))
+vi.hoisted(() => {
+  vi.stubGlobal('fetch', vi.fn(() => Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve(null),
+    text: () => Promise.resolve('<svg width="1" height="1"></svg>'),
+  })))
+})
 
 describe('AnimatedBackground.vue', () => {
   it('Should render the canvas', () => {
