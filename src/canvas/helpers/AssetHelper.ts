@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { AssetType } from '../enums/AssetType'
 import { IAsset } from '../interfaces/IAsset'
 
@@ -29,7 +28,7 @@ export const loadAssets = async (
 
       case AssetType.SVG:
         promise = loadSVG(asset.url)
-          .then((image: SVGElement) => {
+          .then((image: string) => {
             assetMap.set(asset.url, image)
           })
           .catch((error) => {
@@ -66,13 +65,15 @@ export const loadImage = (url: string): Promise<HTMLImageElement> => {
 /**
  * Load an SVG.
  * @param url 
- * @returns Promise<SVGElement>
+ * @returns Promise<string>
  */
-export const loadSVG = async (url: string): Promise<SVGElement> => {
-  const { data } = await axios.get(url, {
-    responseType: 'text' // Specify response type as 'text' for SVG
-  })
-  return data
+export const loadSVG = async (url: string): Promise<string> => {
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`)
+  }
+
+  return await response.text()
 }
 
 /**
