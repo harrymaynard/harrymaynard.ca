@@ -95,7 +95,7 @@ $icon-size: 40px;
         height: $icon-size;
         color: #FFF;
         filter: drop-shadow(0px 0px 3px #000);
-        transition: all 0.5s ease;
+        transition: all 0.3s ease;
 
         &.linkedin {
           border-radius: 9px;
