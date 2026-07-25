@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-import '@/features/wave-sim/helpers/Waves'
+import { onMounted } from 'vue'
+
+onMounted(() => {
+  import('@/features/wave-sim/helpers/Waves')
+})
 </script>
 
 <template>
@@ -7,11 +11,11 @@ import '@/features/wave-sim/helpers/Waves'
     ref="AnimatedBackgroundContainerEl"
     class="animated-background"
   >
-    <canvas
+    <!-- <canvas
       id="background-canvas"
       ref="backgroundCanvasEl"
-    />
-    <div id="overlay" />
+    /> -->
+    <!-- <div id="overlay" /> -->
     <div id="ui">
       <div id="camera">
         <canvas id="profile" width="350" height="105"></canvas>

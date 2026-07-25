@@ -376,7 +376,7 @@ export const buildProgramWrapper = function (gl, vertexShader, fragmentShader, a
     gl.linkProgram(program);
     const uniformLocations = {};
     const numberOfUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
-    for (const i = 0; i < numberOfUniforms; i += 1) {
+    for (let i = 0; i < numberOfUniforms; i += 1) {
         const activeUniform = gl.getActiveUniform(program, i),
             uniformLocation = gl.getUniformLocation(program, activeUniform.name);
         uniformLocations[activeUniform.name] = uniformLocation;
@@ -468,7 +468,7 @@ export const getMousePosition = function (event, element) {
 
 export const hasWebGLSupportWithExtensions = function (extensions) {
     const canvas = document.createElement('canvas');
-    const gl = null;
+    let gl = null;
     try {
         gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
     } catch {
@@ -478,7 +478,7 @@ export const hasWebGLSupportWithExtensions = function (extensions) {
         return false;
     }
 
-    for (const i = 0; i < extensions.length; ++i) {
+    for (let i = 0; i < extensions.length; ++i) {
         if (gl.getExtension(extensions[i]) === null) {
             return false
         }

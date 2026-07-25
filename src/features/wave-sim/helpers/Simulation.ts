@@ -387,7 +387,7 @@ export const Simulator = function (canvasParam, width, height) {
     gl.getExtension('OES_texture_float');
     gl.getExtension('OES_texture_float_linear');
 
-    gl.clearColor.apply(gl, Common.CLEAR_COLOR);
+    gl.clearColor(...Common.CLEAR_COLOR);
     gl.enable(gl.DEPTH_TEST);
 
     const fullscreenVertexShader = Common.buildShader(gl, gl.VERTEX_SHADER, FULLSCREEN_VERTEX_SOURCE);
@@ -428,7 +428,7 @@ export const Simulator = function (canvasParam, width, height) {
         Common.buildShader(gl, gl.VERTEX_SHADER, OCEAN_VERTEX_SOURCE),
         Common.buildShader(gl, gl.FRAGMENT_SHADER, OCEAN_FRAGMENT_SOURCE), {
             'a_position': 0,
-            'a_coordinates': OCEAN_COORDINATES_UNIT
+            'a_coordinates': Common.OCEAN_COORDINATES_UNIT
     });
     gl.useProgram(oceanProgram.program);
     gl.uniform1f(oceanProgram.uniformLocations['u_geometrySize'], Common.GEOMETRY_SIZE);
@@ -551,7 +551,7 @@ export const Simulator = function (canvasParam, width, height) {
         //store phases separately to ensure continuity of waves during parameter editing
         gl.useProgram(phaseProgram.program);
         gl.bindFramebuffer(gl.FRAMEBUFFER, pingPhase ? pongPhaseFramebuffer : pingPhaseFramebuffer);
-        gl.uniform1i(phaseProgram.uniformLocations['u_phases'], pingPhase ? PING_PHASE_UNIT : PONG_PHASE_UNIT);
+        gl.uniform1i(phaseProgram.uniformLocations['u_phases'], pingPhase ? Common.PING_PHASE_UNIT : Common.PONG_PHASE_UNIT);
         pingPhase = !pingPhase;
         gl.uniform1f(phaseProgram.uniformLocations['u_deltaTime'], deltaTime);
         gl.uniform1f(phaseProgram.uniformLocations['u_size'], size);
@@ -559,7 +559,7 @@ export const Simulator = function (canvasParam, width, height) {
 
         gl.useProgram(spectrumProgram.program);
         gl.bindFramebuffer(gl.FRAMEBUFFER, spectrumFramebuffer);
-        gl.uniform1i(spectrumProgram.uniformLocations['u_phases'], pingPhase ? PING_PHASE_UNIT : PONG_PHASE_UNIT);
+        gl.uniform1i(spectrumProgram.uniformLocations['u_phases'], pingPhase ? Common.PING_PHASE_UNIT : Common.PONG_PHASE_UNIT);
         gl.uniform1f(spectrumProgram.uniformLocations['u_size'], size);
         gl.uniform1f(spectrumProgram.uniformLocations['u_choppiness'], choppiness);
         gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
