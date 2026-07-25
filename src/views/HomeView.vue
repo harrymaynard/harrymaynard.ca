@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import IconGitHub from '@/components/icons/IconGitHub.vue'
 import IconLinkedIn from '@/components/icons/IconLinkedIn.vue'
-import PerlinNoiseWaveBackground from '@/components/PerlinNoiseWaveBackground.vue'
+import WaveSimBackground from '@/features/wave-sim/components/WaveSimBackground.vue'
 
 const isMounted = ref<boolean>(false)
 
@@ -30,7 +30,8 @@ const handleClickLink = (event: MouseEvent): void => {
 
 <template>
   <div class="home-view">
-    <PerlinNoiseWaveBackground />
+    <!-- <PerlinNoiseWaveBackground /> -->
+     <WaveSimBackground />
     <Transition name="initial-load">
       <div v-if="isMounted">
         <h1 class="title">
