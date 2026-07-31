@@ -1,6 +1,6 @@
 import { defineConfig } from 'vite'
-import eslintPlugin from 'vite-plugin-eslint'
-import vue from '@vitejs/plugin-vue'
+import eslintCheckerPlugin from 'vite-plugin-checker'
+import vuePlugin from '@vitejs/plugin-vue'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
@@ -10,8 +10,8 @@ const __dirname = path.dirname(__filename)
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    eslintPlugin()
+    vuePlugin(),
+    eslintCheckerPlugin()
   ],
   build: {
     chunkSizeWarningLimit: 2048,
