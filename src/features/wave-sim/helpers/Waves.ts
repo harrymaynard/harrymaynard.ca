@@ -167,7 +167,6 @@ const main = function () {
             uiDiv.style.height = windowHeight + 'px';
             cameraDiv.style.width = windowWidth + 'px';
             cameraDiv.style.height = windowHeight + 'px';
-            simulatorCanvas.style.top = '0px';
             uiDiv.style.top = '0px';
             setUIPerspective(windowHeight);
             width = windowWidth;
@@ -176,7 +175,6 @@ const main = function () {
             const newHeight = windowWidth / Common.MIN_ASPECT;
             Common.makePerspectiveMatrix(projectionMatrix, Common.FOV, windowWidth / newHeight, Common.NEAR, Common.FAR);
             simulator.resize(windowWidth, newHeight);
-            simulatorCanvas.style.top = (windowHeight - newHeight) * 0.5 + 'px';
             uiDiv.style.top = (windowHeight - newHeight) * 0.5 + 'px';
             setUIPerspective(newHeight);
             uiDiv.style.width = windowWidth + 'px';
@@ -186,6 +184,7 @@ const main = function () {
             width = windowWidth;
             height = newHeight;
         }
+        uiDiv.style.display = 'none';
     };
 
     window.addEventListener('resize', onresize);
