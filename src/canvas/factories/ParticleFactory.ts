@@ -102,8 +102,8 @@ export class ParticleFactory {
     width: number,
     height: number
   ): ICoordinates {
-    let x: number = 0
-    let y: number = 0
+    let x: number
+    let y: number
     let edgeCoordinates: ICoordinates
 
     switch (enterType) {

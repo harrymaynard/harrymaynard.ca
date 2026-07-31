@@ -171,7 +171,7 @@ export class CircadianCycleEntity extends AbstractEntity {
     sunriseTime: number,
     sunsetTime: number
   ): number {
-    let planetDisplayDuration: number = 1
+    let planetDisplayDuration: number
     
     if (Date.now() < sunriseTime) {
       sunsetTime -= SINGLE_DAY_DURATION
